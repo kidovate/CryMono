@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "GameObject.h"
 
+#include "MonoScriptSystem.h"
+
 #include <IGameObject.h>
 
 CScriptbind_GameObject::CScriptbind_GameObject()
@@ -28,7 +30,7 @@ CScriptbind_GameObject::CScriptbind_GameObject()
 
 IGameObject *CScriptbind_GameObject::GetGameObject(EntityId id)
 {
-	return gEnv->pGame->GetIGameFramework()->GetGameObject(id);
+	return g_pScriptSystem->GetIGameFramework()->GetGameObject(id);
 }
 
 void CScriptbind_GameObject::EnablePostUpdates(IGameObject *pGameObject, IGameObjectExtension *pExtension, bool enable)

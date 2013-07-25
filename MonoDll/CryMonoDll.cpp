@@ -23,11 +23,11 @@ extern "C"
 
 extern "C"
 {
-	MONO_API IMonoScriptSystem *InitCryMono(ISystem *pSystem)
+	MONO_API IMonoScriptSystem *InitCryMono(ISystem *pSystem, IGameFramework *pGameFramework)
 	{
 		ModuleInitISystem(pSystem, "CryMono");
 
-		return new CScriptSystem();
+		return new CScriptSystem(pGameFramework);
 	}
 }
 #endif

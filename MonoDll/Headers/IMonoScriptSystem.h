@@ -27,6 +27,8 @@ struct IMonoEntityManager;
 struct IMonoConverter;
 struct IMonoScriptEventListener;
 
+struct IGameFramework;
+
 /// <summary>
 /// Script flags are passed to IMonoScriptSystem::InstantiateScript and RemoveScriptInstance as a way to identify scripts more effectively, and to solve the issue with scripts being of multiple types.
 /// </summary>
@@ -154,7 +156,7 @@ struct IMonoScriptSystem
 	/// <summary>
 	/// Entry point of the dll, used to set up CryMono when not using the Plugin SDK.
 	/// </summary>
-	typedef IMonoScriptSystem *(*TEntryFunction)(ISystem* pSystem);
+	typedef IMonoScriptSystem *(*TEntryFunction)(ISystem* pSystem, IGameFramework *pGameFramework);
 #endif
 };
 

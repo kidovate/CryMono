@@ -198,7 +198,7 @@ void CScriptbind_Entity::OnReloadComplete()
 void CScriptbind_Entity::PlayAnimation(IEntity *pEntity, mono::string animationName, int slot, int layer, float blend, float speed, EAnimationFlags flags)
 {
 	// Animation graph input
-	/*if(IGameObject *pGameObject = gEnv->pGameFramework->GetGameObject(pEntity->GetId()))
+	/*if(IGameObject *pGameObject = g_pScriptSystem->GetIGameFramework()->GetGameObject(pEntity->GetId()))
 	{
 		if(IAnimatedCharacter *pAniamtedCharacter = static_cast<IAnimatedCharacter*>(pGameObject->AcquireExtension("AnimatedCharacter")))	
 		{
@@ -277,7 +277,7 @@ void CScriptbind_Entity::OnSpawn(IEntity *pEntity,SEntitySpawnParams &params)
 	if(!IsMonoEntity(className))// && strcmp(className, "[NativeEntity]"))
 		return;
 
-	auto gameObject = gEnv->pGameFramework->GetIGameObjectSystem()->CreateGameObjectForEntity(pEntity->GetId());
+	auto gameObject = g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->CreateGameObjectForEntity(pEntity->GetId());
 	gameObject->ActivateExtension(className);
 }
 
@@ -361,7 +361,7 @@ bool CScriptbind_Entity::RegisterEntityClass(SEntityRegistrationParams params)
 	bool result = gEnv->pEntitySystem->GetClassRegistry()->RegisterClass(new CEntityClass(entityClassDesc, pProperties, numProperties));
 
 	static SMonoEntityCreator creator;
-	gEnv->pGameFramework->GetIGameObjectSystem()->RegisterExtension(className, &creator, nullptr);
+	g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->RegisterExtension(className, &creator, nullptr);
 
 	return result;
 }
@@ -391,7 +391,7 @@ mono::object CScriptbind_Entity::SpawnEntity(EntitySpawnParams monoParams, bool 
 			entityInfo.pEntity = pEntity;
 			entityInfo.id = pEntity->GetId();
 
-			if(IGameObject *pGameObject = gEnv->pGameFramework->GetGameObject(spawnParams.id))
+			if(IGameObject *pGameObject = g_pScriptSystem->GetIGameFramework()->GetGameObject(spawnParams.id))
 			{
 				if(CMonoEntityExtension *pEntity = static_cast<CMonoEntityExtension *>(pGameObject->QueryExtension(className)))
 					return pEntity->GetScript()->GetManagedObject();
@@ -1147,7 +1147,7 @@ void CScriptbind_Entity::RemoteInvocation(EntityId entityId, EntityId targetId, 
 {
 	CRY_ASSERT(entityId != 0);
 
-	IGameObject *pGameObject = gEnv->pGameFramework->GetGameObject(entityId);
+	IGameObject *pGameObject = g_pScriptSystem->GetIGameFramework()->GetGameObject(entityId);
 	CRY_ASSERT(pGameObject);
 
 	CMonoEntityExtension::RMIParams params(args, ToCryString(methodName), targetId);

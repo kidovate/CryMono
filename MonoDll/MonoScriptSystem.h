@@ -46,7 +46,7 @@ class CScriptSystem
 	typedef std::map<const void *, const char *> TMethodBindings;
 
 public:
-	CScriptSystem();
+	CScriptSystem(IGameFramework *pGameFramework);
 	~CScriptSystem();
 
 	// IMonoScriptSystem
@@ -107,6 +107,8 @@ public:
 
 	bool DetectedChanges() { return m_bDetectedChanges; }
 
+	IGameFramework *GetIGameFramework() { return m_pGameFramework; }
+
 protected:
 	bool CompleteInit();
 
@@ -134,6 +136,8 @@ protected:
 	IMonoAssembly *m_pPdb2MdbAssembly;
 
 	SCVars *m_pCVars;
+
+	IGameFramework *m_pGameFramework;
 
 	// We temporarily store scriptbind methods here if developers attempt to register them prior to the script system has been initialized properly.
 	TMethodBindings m_methodBindings;

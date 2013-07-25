@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "LevelSystem.h"
 
+#include "MonoScriptSystem.h"
+
 #include <ILevelSystem.h>
 #include <IGameFramework.h>
 
@@ -28,7 +30,7 @@ CScriptbind_LevelSystem::CScriptbind_LevelSystem()
 
 ILevelInfo *CScriptbind_LevelSystem::GetCurrentLevel()
 {
-	if(ILevel *pLevel = gEnv->pGame->GetIGameFramework()->GetILevelSystem()->GetCurrentLevel())
+	if(ILevel *pLevel = g_pScriptSystem->GetIGameFramework()->GetILevelSystem()->GetCurrentLevel())
 		return pLevel->GetLevelInfo();
 
 	return nullptr;
@@ -36,7 +38,7 @@ ILevelInfo *CScriptbind_LevelSystem::GetCurrentLevel()
 
 ILevelInfo *CScriptbind_LevelSystem::LoadLevel(mono::string name)
 {
-	if(ILevel *pLevel = gEnv->pGame->GetIGameFramework()->GetILevelSystem()->LoadLevel(ToCryString(name)))
+	if(ILevel *pLevel = g_pScriptSystem->GetIGameFramework()->GetILevelSystem()->LoadLevel(ToCryString(name)))
 		return pLevel->GetLevelInfo();
 
 	return nullptr;
@@ -44,12 +46,12 @@ ILevelInfo *CScriptbind_LevelSystem::LoadLevel(mono::string name)
 
 bool CScriptbind_LevelSystem::IsLevelLoaded()
 {
-	return gEnv->pGame->GetIGameFramework()->GetILevelSystem()->IsLevelLoaded();
+	return g_pScriptSystem->GetIGameFramework()->GetILevelSystem()->IsLevelLoaded();
 }
 
 void CScriptbind_LevelSystem::UnloadLevel()
 {
-	return gEnv->pGame->GetIGameFramework()->GetILevelSystem()->UnLoadLevel();
+	return g_pScriptSystem->GetIGameFramework()->GetILevelSystem()->UnLoadLevel();
 }
 
 mono::string CScriptbind_LevelSystem::GetName(ILevelInfo *pLevelInfo)

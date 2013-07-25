@@ -15,7 +15,7 @@ CScriptbind_Input::CScriptbind_Input()
 {
 	REGISTER_METHOD(RegisterAction);
 
-	gEnv->pGameFramework->GetIActionMapManager()->AddExtraActionListener(this);
+	g_pScriptSystem->GetIGameFramework()->GetIActionMapManager()->AddExtraActionListener(this);
 	gEnv->pHardwareMouse->AddListener(this);
 
 	if(gEnv->pInput)
@@ -25,9 +25,9 @@ CScriptbind_Input::CScriptbind_Input()
 CScriptbind_Input::~CScriptbind_Input()
 {
 	// The code below currently crashes the Launcher at shutdown
-	/*if(gEnv->pGame->GetIGameFramework())
+	/*if(g_pScriptSystem->GetIGameFramework())
 	{
-		if(IActionMapManager *pActionmapManager = gEnv->pGame->GetIGameFramework()->GetIActionMapManager())
+		if(IActionMapManager *pActionmapManager = g_pScriptSystem->GetIGameFramework()->GetIActionMapManager())
 			pActionmapManager->RemoveExtraActionListener(this);
 	}*/
 

@@ -36,7 +36,7 @@ CMonoActor::~CMonoActor()
 	GetGameObject()->ReleaseView(this);
 	GetGameObject()->ReleaseProfileManager(this);
 
-	if(IActorSystem *pActorSystem = gEnv->pGame->GetIGameFramework()->GetIActorSystem())
+	if(IActorSystem *pActorSystem = g_pScriptSystem->GetIGameFramework()->GetIActorSystem())
 		pActorSystem->RemoveActor(GetEntityId());
 
 	if(g_pScriptSystem)
@@ -52,7 +52,7 @@ bool CMonoActor::Init(IGameObject *pGameObject)
 	if (!GetGameObject()->CaptureProfileManager(this))
 		return false;
 
-	gEnv->pGame->GetIGameFramework()->GetIActorSystem()->AddActor(GetEntityId(), this);
+	g_pScriptSystem->GetIGameFramework()->GetIActorSystem()->AddActor(GetEntityId(), this);
 
 	m_pAnimatedCharacter = static_cast<IAnimatedCharacter*>(GetGameObject()->AcquireExtension("AnimatedCharacter"));
 	if (m_pAnimatedCharacter)
@@ -104,8 +104,8 @@ bool CMonoActor::ReloadExtension( IGameObject *pGameObject, const SEntitySpawnPa
 	if (!GetGameObject()->BindToNetwork())
 		return false;
 
-	gEnv->pGame->GetIGameFramework()->GetIActorSystem()->RemoveActor(params.prevId);
-	gEnv->pGame->GetIGameFramework()->GetIActorSystem()->AddActor(GetEntityId(), this);
+	g_pScriptSystem->GetIGameFramework()->GetIActorSystem()->RemoveActor(params.prevId);
+	g_pScriptSystem->GetIGameFramework()->GetIActorSystem()->AddActor(GetEntityId(), this);
 
 	SetAspectProfile(eEA_Physics, eAP_NotPhysicalized);
 
@@ -265,8 +265,6 @@ bool CMonoActor::SetAspectProfile( EEntityAspects aspect, uint8 profile )
 						IPhysicalEntity *pPhysicalEntity=0;
 						Matrix34 delta(IDENTITY);
 
-						pCharacter->GetISkeletonPose()->StandUp(GetEntity()->GetWorldTM(), false, pPhysicalEntity, delta);
-
 						if (pPhysicalEntity)
 						{
 							IEntityPhysicalProxy *pPhysicsProxy=static_cast<IEntityPhysicalProxy *>(GetEntity()->GetProxy(ENTITY_PROXY_PHYSICS));
@@ -278,10 +276,7 @@ bool CMonoActor::SetAspectProfile( EEntityAspects aspect, uint8 profile )
 						}
 
 						if(m_pAnimatedCharacter)
-						{
-							m_pAnimatedCharacter->ForceTeleportAnimationToEntity();
 							m_pAnimatedCharacter->ForceRefreshPhysicalColliderMode();
-						}
 					}
 				}
 				else
@@ -399,7 +394,7 @@ bool CMonoActor::SetAspectProfile( EEntityAspects aspect, uint8 profile )
 void CMonoActor::InitLocalPlayer()
 {
 	GetGameObject()->SetUpdateSlotEnableCondition( this, 0, eUEC_WithoutAI );
-	//gEnv->pGame->GetIGameFramework()->GetIActorSystem()->SetLocalPlayerId(GetEntityId());
+	//g_pScriptSystem->GetIGameFramework()->GetIActorSystem()->SetLocalPlayerId(GetEntityId());
 }
 
 float CMonoActor::GetHealth() const

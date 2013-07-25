@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "Debug.h"
 
+#include "MonoScriptSystem.h"
+
 #include <IGameFramework.h>
 
 std::vector<CFrameProfiler *> CScriptbind_Debug::m_frameProfilers = std::vector<CFrameProfiler *>();
@@ -62,7 +64,7 @@ void CScriptbind_Debug::AddAABB(Vec3 pos, AABB aabb, ColorF clr, float timeout)
 
 IPersistantDebug *CScriptbind_Debug::GetIPersistentDebug()
 {
-	return gEnv->pGameFramework->GetIPersistantDebug();
+	return g_pScriptSystem->GetIGameFramework()->GetIPersistantDebug();
 }
 
 CFrameProfiler *CScriptbind_Debug::CreateFrameProfiler(mono::string methodName)

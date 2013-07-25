@@ -59,7 +59,7 @@
 SCVars *g_pMonoCVars = 0;
 CScriptSystem *g_pScriptSystem = 0;
 
-CScriptSystem::CScriptSystem() 
+CScriptSystem::CScriptSystem(IGameFramework *pGameFramework)
 	: m_pRootDomain(nullptr)
 	, m_pCryBraryAssembly(nullptr)
 	, m_pPdb2MdbAssembly(nullptr)
@@ -69,6 +69,8 @@ CScriptSystem::CScriptSystem()
 	, m_bDetectedChanges(false)
 	, m_bQuitting(false)
 	, m_pConverter(nullptr)
+	, m_bFirstReload(true)
+	, m_pGameFramework(pGameFramework)
 {
 	CryLogAlways("Initializing Mono Script System");
 
@@ -125,10 +127,28 @@ CScriptSystem::CScriptSystem()
 	m_pConverter = new CConverter();
 
 	if(!CompleteInit())
+	{
+		CryLogAlways("CryMono initialization failed!");
 		return;
+	}
+
+	RegisterSecondaryBindings();
+
+	pGameFramework->RegisterListener(this, "CryMono", eFLPriority_Game);
+
+	gEnv->pSystem->GetISystemEventDispatcher()->RegisterListener(&g_systemEventListener_CryMono);
 
 	if(IFileChangeMonitor *pFileChangeMonitor = gEnv->pFileChangeMonitor)
 		pFileChangeMonitor->RegisterListener(this, "scripts\\");
+
+	CryModuleMemoryInfo memInfo;
+	CryModuleGetMemoryInfo(&memInfo);
+
+	IMonoClass *pCryStats = m_pCryBraryAssembly->GetClass("CryStats", "CryEngine.Utilities");
+
+	IMonoObject *pMemoryUsage = *pCryStats->GetPropertyValue(NULL, "MemoryUsage");
+	CryLogAlways("		Initializing CryMono done, MemUsage=%iKb", (memInfo.allocated + pMemoryUsage->Unbox<long>()) / 1024);
+	pMemoryUsage->Release();
 }
 
 CScriptSystem::~CScriptSystem()
@@ -149,8 +169,8 @@ CScriptSystem::~CScriptSystem()
 		(*it)->Release();
 	m_domains.clear();
 
-	if(gEnv->pGameFramework)
-		gEnv->pGameFramework->UnregisterListener(this);
+	if(g_pScriptSystem->GetIGameFramework())
+		g_pScriptSystem->GetIGameFramework()->UnregisterListener(this);
 
 	if(IFileChangeMonitor *pFileChangeMonitor = gEnv->pFileChangeMonitor)
 		pFileChangeMonitor->UnregisterListener(this);
@@ -184,33 +204,7 @@ bool CScriptSystem::CompleteInit()
 
 	RegisterPriorityBindings();
 
-	m_bFirstReload = true;
-	if(Reload())
-	{
-		m_bFirstReload = false;
-
-		RegisterSecondaryBindings();
-
-		gEnv->pGameFramework->RegisterListener(this, "CryMono", eFLPriority_Game);
-
-		gEnv->pSystem->GetISystemEventDispatcher()->RegisterListener(&g_systemEventListener_CryMono);
-
-		CryModuleMemoryInfo memInfo;
-		CryModuleGetMemoryInfo(&memInfo);
-
-		IMonoClass *pCryStats = m_pCryBraryAssembly->GetClass("CryStats", "CryEngine.Utilities");
-
-		IMonoObject *pMemoryUsage = *pCryStats->GetPropertyValue(NULL, "MemoryUsage");
-		CryLogAlways("		Initializing CryMono done, MemUsage=%iKb", (memInfo.allocated + pMemoryUsage->Unbox<long>()) / 1024);
-		pMemoryUsage->Release();
-	}
-	else
-	{
-		CryLogAlways("		Initializing CryMono failed!");
-		return false;
-	}
-
-	return true;
+	return Reload();
 }
 
 bool CScriptSystem::Reload()
@@ -230,7 +224,7 @@ bool CScriptSystem::Reload()
 
 	IMonoDomain *pScriptDomain = CreateDomain("ScriptDomain", nullptr, true);
 
-	IMonoAssembly *pCryBraryAssembly = pScriptDomain->LoadAssembly(PathUtils::GetBinaryPath(true) + "CryBrary.dll");
+	IMonoAssembly *pCryBraryAssembly = pScriptDomain->LoadAssembly(PathUtils::GetBinaryPath() + "CryBrary.dll");
 
 	IMonoArray *pCtorParams = CreateMonoArray(2);
 	pCtorParams->InsertAny(m_bFirstReload);
@@ -392,7 +386,7 @@ void CScriptSystem::OnFileChange(const char *fileName)
 
 void CScriptSystem::RegisterFlownodes()
 {
-	if(m_pScriptManager && gEnv->pGameFramework->GetIFlowSystem())
+	if(m_pScriptManager && g_pScriptSystem->GetIGameFramework()->GetIFlowSystem())
 		m_pScriptManager->CallMethod("RegisterFlownodes");
 }
 
@@ -427,7 +421,7 @@ IMonoObject *CScriptSystem::InstantiateScript(const char *scriptName, EMonoScrip
 
 	if(scriptFlags & eScriptFlag_GameRules)
 	{
-		IMonoClass *pGameRulesInitParamsClass = g_pScriptSystem->GetCryBraryAssembly()->GetClass("GameRulesInitializationParams");
+		IMonoClass *pGameRulesInitParamsClass = m_pCryBraryAssembly->GetClass("GameRulesInitializationParams");
 
 		IMonoArray *pArgs = CreateMonoArray(1);
 
