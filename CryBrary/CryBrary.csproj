@@ -230,7 +230,6 @@
     <Compile Include="Physics\Status\LivingStatus.cs" />
     <Compile Include="Profiling\FrameProfiler.cs" />
     <Compile Include="Profiling\FrameProfilerSection.cs" />
-    <Compile Include="Profiling\ProfiledAttribute.cs" />
     <Compile Include="Script Handling\IScriptInitializationParams.cs" />
     <Compile Include="Script Handling\Native\NativeScriptSystemMethods.cs" />
     <Compile Include="Physics\Explosion.cs" />
