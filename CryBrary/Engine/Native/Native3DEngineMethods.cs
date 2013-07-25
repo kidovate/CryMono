@@ -6,7 +6,7 @@ namespace CryEngine.Native
     internal static class Native3DEngineMethods
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern internal static float GetTerrainElevation(float positionX, float positionY, bool includeOutdoorVoxels);
+        extern internal static float GetTerrainElevation(float positionX, float positionY);
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern internal static int GetTerrainSize();

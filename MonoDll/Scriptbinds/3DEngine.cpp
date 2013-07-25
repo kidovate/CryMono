@@ -24,9 +24,9 @@ CScriptbind_3DEngine::CScriptbind_3DEngine()
 	REGISTER_METHOD(GetMaxViewDistance);
 }
 
-float CScriptbind_3DEngine::GetTerrainElevation(float x, float y, bool includeOutdoorVoxels)
+float CScriptbind_3DEngine::GetTerrainElevation(float x, float y)
 {
-	return gEnv->p3DEngine->GetTerrainElevation(x, y, includeOutdoorVoxels);
+	return gEnv->p3DEngine->GetTerrainElevation(x, y);
 }
 
 float CScriptbind_3DEngine::GetTerrainZ(int x, int y)

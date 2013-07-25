@@ -24,7 +24,7 @@ public:
 	virtual const char *GetClassName() { return "Native3DEngineMethods"; }
 	// ~IMonoScriptBind
 
-	static float GetTerrainElevation(float x, float y, bool includeVoxels);
+	static float GetTerrainElevation(float x, float y);
 	static float GetTerrainZ(int x, int y);
 
 	static int GetTerrainSize();

@@ -27,9 +27,9 @@ namespace CryEngine
             return Native3DEngineMethods.GetTerrainZ(x, y);
         }
 
-        public static float GetTerrainElevation(float x, float y, bool checkVoxels = false)
+        public static float GetTerrainElevation(float x, float y)
         {
-            return Native3DEngineMethods.GetTerrainElevation(x, y, checkVoxels);
+            return Native3DEngineMethods.GetTerrainElevation(x, y);
         }
     }
 }
