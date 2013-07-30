@@ -86,14 +86,10 @@ void CScriptbind_Debug::DeleteFrameProfilerSection(CFrameProfilerSection *pSecti
 
 extern "C"
 {
-	_declspec(dllexport) void __cdecl LogAlways(const char *msg)
+	_declspec(dllexport) void __cdecl Log(const char *msg, const IMiniLog::ELogType nType)
 	{
-		CryLogAlways(msg);
-	}
-
-	_declspec(dllexport) void __cdecl Log(const char *msg)
-	{
-		CryLog(msg);
+		va_list args;
+		gEnv->pLog->LogV(nType, msg, args);
 	}
 
 	_declspec(dllexport) void __cdecl Warning(const char *msg)

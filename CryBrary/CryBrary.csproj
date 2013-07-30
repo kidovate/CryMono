@@ -146,6 +146,7 @@
     <Compile Include="Console\CVar\ExternalCVar.cs" />
     <Compile Include="Console\CVar\StaticCVarField.cs" />
     <Compile Include="Console\CVar\StaticCVarProperty.cs" />
+    <Compile Include="Debug\LogType.cs" />
     <Compile Include="Engine\CryPak\Native\NativeCryPakMethods.cs" />
     <Compile Include="Engine\CryPak\PathResolutionRules.cs" />
     <Compile Include="Engine\GeometryFormat.cs" />
