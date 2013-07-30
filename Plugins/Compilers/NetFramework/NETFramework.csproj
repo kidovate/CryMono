@@ -103,6 +103,7 @@
     <ProjectReference Include="..\..\..\CryBrary\CryBrary.csproj">
       <Project>{4a7993b3-6611-4d9d-b8ab-836d6c27b12b}</Project>
       <Name>CryBrary</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
