@@ -90,7 +90,7 @@ namespace CryEngine
 		/// Called after level has been loaded, is not called on serialization.
 		/// Note that this is called prior to GameRules.OnClientConnect and OnClientEnteredGame!
 		/// </summary>
-		protected virtual void OnInit() { }
+		protected virtual void OnLevelLoaded() { }
 
 		/// <summary>
 		/// Called when resetting the state of the entity in Editor.
@@ -167,7 +167,8 @@ namespace CryEngine
 		#endregion
 
 		/// <summary>
-        /// This callback is called when this entity has finished spawning. The entity has been created and added to the list of entities.
+        /// This callback is called when this entity has spawned. The entity has been created and added to the list of entities.
+		/// Some functionality is not yet available at the point this method is called. For all game object interactions, use <see cref="OnPostSpawn"/>.
         /// </summary>
         public virtual void OnSpawn() { }
 

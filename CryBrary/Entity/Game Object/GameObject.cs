@@ -134,6 +134,11 @@ namespace CryEngine.Advanced
             set { NativeGameObjectMethods.EnablePrePhysicsUpdates(Handle, value); }
         }
 
+		public bool BindToNetwork(BindToNetworkMode mode = BindToNetworkMode.Normal)
+		{
+			return NativeGameObjectMethods.BindToNetwork(Handle, mode);
+		}
+
         List<GameObjectExtension> Extensions { get; set; }
 
         internal IntPtr Handle { get; set; }

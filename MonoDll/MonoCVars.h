@@ -17,6 +17,8 @@ struct SCVars
 	int mono_compileScripts;
 	const char *mono_scriptDirectory;
 
+	int mono_entityDeleteExtensionOnNetworkBindFailure;
+
 	SCVars()
 	{
 		memset(this,0,sizeof(SCVars));

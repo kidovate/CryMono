@@ -52,7 +52,7 @@ namespace CryEngine
 		/// Called after level has been loaded, is not called on serialization.
 		/// Note that this is called prior to GameRules.OnClientConnect and OnClientEnteredGame!
 		/// </summary>
-		protected virtual void OnInit() { }
+		protected virtual void OnLevelLoaded() { }
 
 		/// <summary>
 		/// Called when resetting the state of the entity in Editor.

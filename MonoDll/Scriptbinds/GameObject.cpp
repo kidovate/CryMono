@@ -3,8 +3,6 @@
 
 #include "MonoScriptSystem.h"
 
-#include <IGameObject.h>
-
 CScriptbind_GameObject::CScriptbind_GameObject()
 {
 	REGISTER_METHOD(GetGameObject);
@@ -26,6 +24,8 @@ CScriptbind_GameObject::CScriptbind_GameObject()
 
 	REGISTER_METHOD(EnablePhysicsEvent);
 	REGISTER_METHOD(WantsPhysicsEvent);
+
+	REGISTER_METHOD(BindToNetwork);
 }
 
 IGameObject *CScriptbind_GameObject::GetGameObject(EntityId id)
@@ -89,4 +89,9 @@ void CScriptbind_GameObject::EnablePhysicsEvent(IGameObject *pGameObject, bool e
 bool CScriptbind_GameObject::WantsPhysicsEvent(IGameObject *pGameObject, int event)
 {
 	return pGameObject->WantsPhysicsEvent(event);
+}
+
+bool CScriptbind_GameObject::BindToNetwork(IGameObject *pGameObject, EBindToNetworkMode mode)
+{
+	return pGameObject->BindToNetwork(mode);
 }

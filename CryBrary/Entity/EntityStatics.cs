@@ -40,7 +40,15 @@ namespace CryEngine
         /// <returns></returns>
         public static T Spawn<T>(string entityName, Vec3? pos = null, Quat? rot = null, Vec3? scale = null, bool autoInit = true, EntityFlags flags = EntityFlags.CastShadow, params object[] args) where T : Entity, new()
         {
-            return Spawn(entityName, typeof(T).Name, pos, rot, scale, autoInit, flags, args) as T;
+			var entity = Spawn(entityName, typeof(T).Name, pos, rot, scale, autoInit, flags, args);
+			if (entity == null)
+				return null;
+
+			var entityT = entity as T;
+			if (entityT == null)
+				Debug.LogAlways("[Entity.Spawn<T>] Spawn was successful, but type could not be casted to type {0}", typeof(T).Name);
+
+			return entityT;
         }
 
         /// <summary>

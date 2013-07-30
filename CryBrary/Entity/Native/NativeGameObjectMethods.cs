@@ -36,6 +36,9 @@ namespace CryEngine.Native
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		extern public static void EnablePhysicsEvent(IntPtr gameObjectPtr, bool enable, EntityPhysicsEvents physicsEvent);
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
-		extern public static bool WantsPhysicsEvent(IntPtr gameObjectPtr, EntityPhysicsEvents physicsEvent);	
+		extern public static bool WantsPhysicsEvent(IntPtr gameObjectPtr, EntityPhysicsEvents physicsEvent);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		extern public static bool BindToNetwork(IntPtr gameObjectPtr, BindToNetworkMode mode);	
 	}
 }

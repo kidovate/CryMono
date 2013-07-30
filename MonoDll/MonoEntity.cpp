@@ -7,6 +7,8 @@
 
 #include "EntityEventHandling.h"
 
+#include "MonoCVars.h"
+
 #include <IEntityClass.h>
 
 #include <IMonoScriptSystem.h>
@@ -39,7 +41,7 @@ bool CMonoEntityExtension::Init(IGameObject *pGameObject)
 
 	pGameObject->EnablePhysicsEvent( true, eEPE_OnPostStepImmediate );
 
-	if (!GetGameObject()->BindToNetwork())
+	if (!GetGameObject()->BindToNetwork() && g_pMonoCVars->mono_entityDeleteExtensionOnNetworkBindFailure == 1)
 		return false;
 
 	IEntity *pEntity = GetEntity();

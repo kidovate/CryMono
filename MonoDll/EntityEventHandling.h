@@ -43,9 +43,6 @@ inline void HandleEntityEvent(SEntityEvent &event, IEntity *pEntity, IMonoObject
 {
 	switch(event.event)
 	{
-	case ENTITY_EVENT_LEVEL_LOADED:
-		pScript->CallMethod("OnInit");
-		break;
 	case ENTITY_EVENT_RESET:
 		{
 			bool enterGamemode = event.nParam[0]==1;
@@ -88,6 +85,9 @@ inline void HandleEntityEvent(SEntityEvent &event, IEntity *pEntity, IMonoObject
 		break;
 	case ENTITY_EVENT_START_LEVEL:
 		pScript->CallMethod("OnStartLevel");
+		break;
+	case ENTITY_EVENT_LEVEL_LOADED:
+		pScript->CallMethod("OnLevelLoaded");
 		break;
 	case ENTITY_EVENT_ENTERAREA:
 		pScript->CallMethod("OnEnterArea", (EntityId)event.nParam[0], (int)event.nParam[1], (EntityId)event.nParam[2]);

@@ -176,6 +176,7 @@
     <Compile Include="Entity\EntityPhysicsEvents.cs" />
     <Compile Include="Entity\Extensions\Attachment\AttachmentObjectType.cs" />
     <Compile Include="Entity\Extensions\Attachment\AttachmentType.cs" />
+    <Compile Include="Entity\Game Object\BindToNetworkMode.cs" />
     <Compile Include="Entity\Game Object\EntityAspects.cs" />
     <Compile Include="Entity\Game Object\GameObject.cs" />
     <Compile Include="Entity\Game Object\GameObjectExtension.cs" />

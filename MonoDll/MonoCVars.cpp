@@ -29,6 +29,8 @@ void SCVars::InitCVars(IConsole *pConsole)
 	REGISTER_CVAR(mono_compileScripts, 1, nullOrCheatFlag, "Determines whether source files found in the Scripts directory will be compiled and loaded");
 	REGISTER_CVAR(mono_scriptDirectory, "", nullOrCheatFlag, "If set, CryMono will attempt to load its script files (e.g. *.cs) from this directory. Full path only.");
 
+	REGISTER_CVAR(mono_entityDeleteExtensionOnNetworkBindFailure, 1, nullOrCheatFlag, "If set, the game object extension will delete itself if IGameObject::BindToNetwork returns false in the IGameObjectExtension::Init function");
+
 	REGISTER_COMMAND("mono_reload", CmdReload, nullOrCheatFlag, "[Realtime Scripting] Reloads / recompiles all scripts");
 }
 

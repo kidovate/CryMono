@@ -11,6 +11,8 @@
 #include <MonoCommon.h>
 #include <IMonoScriptBind.h>
 
+#include <IGameObject.h>
+
 struct IGameObject;
 struct IGameObjectExtension;
 
@@ -48,6 +50,8 @@ protected:
 	static bool SetAspectProfile(IGameObject *pGameObject, EEntityAspects aspect, uint8 profile, bool fromNetwork = false);
 	static void EnablePhysicsEvent(IGameObject *pGameObject, bool enable, int event);
 	static bool WantsPhysicsEvent(IGameObject *pGameObject, int event);
+
+	static bool BindToNetwork(IGameObject *pGameObject, EBindToNetworkMode mode);
 	// ~Externals
 };
 
