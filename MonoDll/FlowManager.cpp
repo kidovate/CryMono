@@ -32,6 +32,8 @@ CFlowManager::CFlowManager()
 	REGISTER_METHOD(GetPortValueBool);
 	REGISTER_METHOD(GetPortValueVec3);
 
+	REGISTER_METHOD(IsOutputConnected);
+
 	REGISTER_METHOD(GetTargetEntity);
 
 	REGISTER_METHOD(SetRegularlyUpdated);
@@ -106,6 +108,11 @@ bool CFlowManager::GetPortValueBool(CMonoFlowNode *pFlowNode, int index)
 Vec3 CFlowManager::GetPortValueVec3(CMonoFlowNode *pFlowNode, int index)
 {
 	return pFlowNode->GetPortVec3(index);
+}
+
+bool CFlowManager::IsOutputConnected(CMonoFlowNode *pNode, int index)
+{
+	return pNode->IsOutputConnected(index);
 }
 
 IEntity *CFlowManager::GetTargetEntity(CMonoFlowNode *pNode, EntityId &id)
