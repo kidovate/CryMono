@@ -86,6 +86,9 @@ private:
 	SActivationInfo *m_pActInfo;
 	IFlowGraph *m_pHookedGraph;
 
+	TFlowNodeId m_id;
+	TFlowGraphId m_graphId;
+
 	IMonoObject *m_pScript;
 
 	ENodeCloneType m_cloneType;

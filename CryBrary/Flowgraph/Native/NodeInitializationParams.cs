@@ -10,7 +10,6 @@ namespace CryEngine.Flowgraph.Native
         public IntPtr nodePtr;
 
         public UInt16 nodeId;
-
         public UInt32 graphId;
     }
 }
