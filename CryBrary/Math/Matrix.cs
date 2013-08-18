@@ -314,19 +314,26 @@ namespace CryEngine
             return m33;
         }
 
-        public static Matrix33 operator *(Matrix33 left, Matrix33 right)
+		public static Matrix33 operator *(Matrix33 left, Matrix33 right)
+		{
+			var m = new Matrix33();
+			m.M00 = left.M00 * right.M00 + left.M01 * right.M10 + left.M02 * right.M20;
+			m.M01 = left.M00 * right.M01 + left.M01 * right.M11 + left.M02 * right.M21;
+			m.M02 = left.M00 * right.M02 + left.M01 * right.M12 + left.M02 * right.M22;
+			m.M10 = left.M10 * right.M00 + left.M11 * right.M10 + left.M12 * right.M20;
+			m.M11 = left.M10 * right.M01 + left.M11 * right.M11 + left.M12 * right.M21;
+			m.M12 = left.M10 * right.M02 + left.M11 * right.M12 + left.M12 * right.M22;
+			m.M20 = left.M20 * right.M00 + left.M21 * right.M10 + left.M22 * right.M20;
+			m.M21 = left.M20 * right.M01 + left.M21 * right.M11 + left.M22 * right.M21;
+			m.M22 = left.M20 * right.M02 + left.M21 * right.M12 + left.M22 * right.M22;
+			return m;
+		}
+
+		public static Vec3 operator *(Matrix33 left, Vec3 right)
         {
-            var m = new Matrix33();
-            m.M00 = left.M00 * right.M00 + left.M01 * right.M10 + left.M02 * right.M20;
-            m.M01 = left.M00 * right.M01 + left.M01 * right.M11 + left.M02 * right.M21;
-            m.M02 = left.M00 * right.M02 + left.M01 * right.M12 + left.M02 * right.M22;
-            m.M10 = left.M10 * right.M00 + left.M11 * right.M10 + left.M12 * right.M20;
-            m.M11 = left.M10 * right.M01 + left.M11 * right.M11 + left.M12 * right.M21;
-            m.M12 = left.M10 * right.M02 + left.M11 * right.M12 + left.M12 * right.M22;
-            m.M20 = left.M20 * right.M00 + left.M21 * right.M10 + left.M22 * right.M20;
-            m.M21 = left.M20 * right.M01 + left.M21 * right.M11 + left.M22 * right.M21;
-            m.M22 = left.M20 * right.M02 + left.M21 * right.M12 + left.M22 * right.M22;
-            return m;
+			return new Vec3(right.X * left.M00 + right.Y * left.M01 + right.Z * left.M02,
+				right.X * left.M10 + right.Y * left.M11 + right.Z * left.M12,
+				right.X * left.M20 + right.Y * left.M21 + right.Z * left.M22);
         }
         #endregion
     }
