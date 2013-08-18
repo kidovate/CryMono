@@ -29,8 +29,6 @@ namespace CryEngine.CharacterCustomization
 			var slotAttachmentElements = element.Elements("Attachment");
 
 			int count = slotAttachmentElements.Count();
-			if (Slot.CanBeEmpty)
-				count++;
 
 			var slotAttachments = new CharacterAttachment[count];
 
@@ -40,9 +38,6 @@ namespace CryEngine.CharacterCustomization
 
 				slotAttachments[i] = new CharacterAttachment(Slot, slotAttachmentElement);
 			}
-
-			if (Slot.CanBeEmpty)
-				slotAttachments[slotAttachmentElements.Count()] = new CharacterAttachment(Slot, null);
 
 			Attachments = slotAttachments;
 		}

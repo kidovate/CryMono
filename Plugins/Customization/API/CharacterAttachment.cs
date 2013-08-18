@@ -14,7 +14,10 @@ namespace CryEngine.CharacterCustomization
 			Slot = slot;
 
 			if (element == null)
+			{
 				Name = "None";
+				ThumbnailPath = "Objects/Characters/Attachments/thumb_empty.dds";
+			}
 			else
 			{
 				var slotAttachmentNameAttribute = element.Attribute("Name");
@@ -54,7 +57,6 @@ namespace CryEngine.CharacterCustomization
 				foreach (var materialElement in element.Elements("Material"))
 					slotAttachmentMaterials.Add(new CharacterAttachmentMaterial(this, materialElement));
 
-				Debug.LogAlways("Found {0} materials for {1}", slotAttachmentMaterials.Count, Name);
 				Materials = slotAttachmentMaterials.ToArray();
 				Material = Materials.FirstOrDefault();
 

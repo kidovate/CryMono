@@ -22,6 +22,9 @@ namespace CryEngine.CharacterCustomization
             if(allowNoneAttribute != null)
                 CanBeEmpty = allowNoneAttribute.Value == "1";
 
+			if(CanBeEmpty)
+				EmptyAttachment = new CharacterAttachment(this, null);
+
             var hiddenAttribute = element.Attribute("hidden");
             if(hiddenAttribute != null)
                 Hidden = hiddenAttribute.Value == "1";
@@ -71,6 +74,8 @@ namespace CryEngine.CharacterCustomization
         {
 			GetWriteableElement().SetAttributeValue("Binding", null);
         }
+
+		public CharacterAttachment EmptyAttachment { get; set; }
 
 		public bool Write(CharacterAttachment attachment, XElement attachmentElement = null, bool overwrite = true)
 		{
@@ -168,6 +173,9 @@ namespace CryEngine.CharacterCustomization
 				}
 			}
 
+			if (name == "None")
+				return EmptyAttachment;
+
             return null;
         }
 
@@ -239,7 +247,7 @@ namespace CryEngine.CharacterCustomization
                 if (iRandom != -1)
 					return brand.Attachments.ElementAt(iRandom);
                 else
-                    return null;
+                    return EmptyAttachment;
             }
         }
 
