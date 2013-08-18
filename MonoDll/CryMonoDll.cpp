@@ -10,7 +10,7 @@ PluginManager::IPluginManager* gPluginManager = NULL; //!< pointer to plugin man
 
 extern "C"
 {
-    MONO_API PluginManager::IPluginBase *GetPluginInterface(const char *sInterfaceVersion)
+    CRYMONO_API PluginManager::IPluginBase *GetPluginInterface(const char *sInterfaceVersion)
     {
         // This function should not create a new interface class each call.
         static CryMonoPlugin::CPluginCryMono modulePlugin;
@@ -23,7 +23,7 @@ extern "C"
 
 extern "C"
 {
-	MONO_API IMonoScriptSystem *InitCryMono(ISystem *pSystem, IGameFramework *pGameFramework)
+	CRYMONO_API IMonoScriptSystem *InitCryMono(ISystem *pSystem, IGameFramework *pGameFramework)
 	{
 		ModuleInitISystem(pSystem, "CryMono");
 
