@@ -30,52 +30,78 @@ namespace CryEngine
         /// </summary>
         /// <param name="format"></param>
         /// <param name="args"></param>
-        public static void Log(string format, params object[] args)
+        public static void Log(string format, LogType type = LogType.Message, params object[] args)
         {
 #if UNIT_TESTING
             System.Console.WriteLine(format, args);
 #else
-            NativeDebugMethods.Log(String.Format(format, args));
+			NativeDebugMethods.Log(String.Format(format, args), type);
 #endif
         }
 
         /// <summary>
         /// Logs a message to the console
         /// </summary>
-        public static void Log(string msg)
+        public static void Log(string msg, LogType type = LogType.Message)
         {
 #if UNIT_TESTING
             System.Console.WriteLine(msg);
 #else
-            NativeDebugMethods.Log(msg);
+			NativeDebugMethods.Log(msg, type);
 #endif
         }
 
-        /// <summary>
-        /// Logs a message to the console, regardless of log_verbosity settings
-        /// </summary>
-        /// <param name="format"></param>
-        /// <param name="args"></param>
-        public static void LogAlways(string format, params object[] args)
-        {
+		/// <summary>
+		/// Logs a message to the console, regardless of log_verbosity settings
+		/// </summary>
+		/// <param name="format"></param>
+		/// <param name="args"></param>
+		public static void LogAlways(string format, params object[] args)
+		{
 #if UNIT_TESTING
             System.Console.WriteLine(format, args);
 #else
-            NativeDebugMethods.LogAlways(String.Format(format, args));
+			NativeDebugMethods.Log(String.Format(format, args), LogType.Always);
 #endif
-        }
+		}
 
-        /// <summary>
-        /// Logs a message to the console, regardless of log_verbosity settings
-        /// </summary>
-        public static void LogAlways(string msg)
-        {
+		/// <summary>
+		/// Logs a message to the console, regardless of log_verbosity settings
+		/// </summary>
+		public static void LogAlways(string msg)
+		{
 #if UNIT_TESTING
             System.Console.WriteLine(msg);
 #else
-            NativeDebugMethods.LogAlways(msg);
+			NativeDebugMethods.Log(msg, LogType.Always);
 #endif
-        }
+		}
+
+		/// <summary>
+		/// Logs an error to console
+		/// </summary>
+		/// <param name="format"></param>
+		/// <param name="args"></param>
+		public static void LogError(string format, params object[] args)
+		{
+#if UNIT_TESTING
+            System.Console.WriteLine(format, args);
+#else
+			NativeDebugMethods.Log(String.Format(format, args), LogType.Error);
+#endif
+		}
+
+		/// <summary>
+		/// Logs a message to the console, regardless of log_verbosity settings
+		/// </summary>
+		public static void LogError(string msg)
+		{
+#if UNIT_TESTING
+            System.Console.WriteLine(msg);
+#else
+			NativeDebugMethods.Log(msg, LogType.Error);
+#endif
+		}
 
         /// <summary>
         /// Logs an exception message to the console
@@ -127,7 +153,7 @@ namespace CryEngine
 #endif
         }
 
-        public static void LogStackTrace()
+        public static void LogStackTrace(LogType type = LogType.Message)
         {
             var stackTrace = new System.Diagnostics.StackTrace(true);
             Debug.LogAlways("Stack trace:");
@@ -138,7 +164,7 @@ namespace CryEngine
                 var method = frame.GetMethod();
                 var fileName = frame.GetFileName() ?? "<unknown>";
 
-                Debug.Log("  at {0}.{1}.{2} () in {3}:{4}", method.DeclaringType.Namespace, method.DeclaringType.Name, method.Name, fileName, frame.GetFileLineNumber());
+				Debug.Log("  at {0}.{1}.{2} () in {3}:{4}", type, method.DeclaringType.Namespace, method.DeclaringType.Name, method.Name, fileName, frame.GetFileLineNumber());
             }
         }
     }

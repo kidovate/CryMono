@@ -71,6 +71,11 @@ namespace CryEngine.Flowgraph
                 throw new ArgumentException("Attempted to activate output with invalid value type!");
         }
 
+		public bool IsActive()
+		{
+			return NativeFlowNodeMethods.IsOutputConnected(ParentNodePointer, PortId);
+		}
+
         IntPtr ParentNodePointer { get; set; }
 
         int PortId { get; set; }
@@ -107,6 +112,11 @@ namespace CryEngine.Flowgraph
             else
                 throw new ArgumentException("Attempted to activate output with invalid value type!");
         }
+
+		public bool IsActive()
+		{
+			return NativeFlowNodeMethods.IsOutputConnected(ParentNodePointer, PortId);
+		}
 
         IntPtr ParentNodePointer { get; set; }
 

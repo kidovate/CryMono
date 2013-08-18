@@ -89,6 +89,8 @@ protected:
 	static void ActivateOutputBool(CMonoFlowNode *pNode, int, bool);
 	static void ActivateOutputVec3(CMonoFlowNode *pNode, int, Vec3);
 
+	static bool IsOutputConnected(CMonoFlowNode *pNode, int);
+
 	static IEntity *GetTargetEntity(CMonoFlowNode *pNode, EntityId &id);
 
 	static void SetRegularlyUpdated(CMonoFlowNode *pNode, bool update);

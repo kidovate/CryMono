@@ -73,6 +73,7 @@ public:
 	void ActivateOutput(int nPort, const T &value) { return CFlowBaseNodeInternal::ActivateOutput<T>(m_pActInfo, nPort, value); }
 
 	bool IsPortActive(int nPort) { return CFlowBaseNodeInternal::IsPortActive(m_pActInfo, nPort); }
+	bool IsOutputConnected(int nPort) { return CFlowBaseNodeInternal::IsOutputConnected(m_pActInfo, nPort); }
 
 	bool GetPortBool(int nPort) { return CFlowBaseNodeInternal::GetPortBool(m_pActInfo, nPort); }
 	int GetPortInt(int nPort) { return CFlowBaseNodeInternal::GetPortInt(m_pActInfo, nPort); }
@@ -85,6 +86,9 @@ private:
 
 	SActivationInfo *m_pActInfo;
 	IFlowGraph *m_pHookedGraph;
+
+	TFlowNodeId m_id;
+	TFlowGraphId m_graphId;
 
 	IMonoObject *m_pScript;
 

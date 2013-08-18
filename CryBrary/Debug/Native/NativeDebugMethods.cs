@@ -36,13 +36,9 @@ namespace CryEngine.Native
 		#endregion
 
 		#region Logging
-		[SuppressUnmanagedCodeSecurity]
-        [SuppressMessage("Microsoft.Globalization", "CA2101:SpecifyMarshalingForPInvokeStringArguments", MessageId = "0"), DllImport("CryMono.dll")]
-        public extern static void LogAlways(string msg);
-
         [SuppressUnmanagedCodeSecurity]
         [SuppressMessage("Microsoft.Globalization", "CA2101:SpecifyMarshalingForPInvokeStringArguments", MessageId = "0"), DllImport("CryMono.dll")]
-        public extern static void Log(string msg);
+        public extern static void Log(string msg, LogType type);
 
         [SuppressUnmanagedCodeSecurity]
         [SuppressMessage("Microsoft.Globalization", "CA2101:SpecifyMarshalingForPInvokeStringArguments", MessageId = "0"), DllImport("CryMono.dll")]

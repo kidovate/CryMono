@@ -14,13 +14,8 @@ using CryEngine.Flowgraph.Native;
 
 namespace CryEngine.Flowgraph
 {
-    public abstract class FlowNode : CryScriptInstance
+    public abstract partial class FlowNode : CryScriptInstance
     {
-        internal static void Register(string typeName)
-        {
-            NativeFlowNodeMethods.RegisterNode(typeName);
-        }
-
         internal override bool InternalInitialize(IScriptInitializationParams initParams)
         {
             var nodeInitParams = (NodeInitializationParams)initParams;
@@ -125,6 +120,11 @@ namespace CryEngine.Flowgraph
         /// Preferred over <see cref="OnUpdate"/> due to supporting <see cref="GetPortValue"/> within the update loop.
         /// </summary>
         protected virtual void OnNodeUpdate() { }
+
+		/// <summary>
+		/// Called when the node is removed.
+		/// </summary>
+		protected virtual void OnRemove() { }
         #endregion
 
         #region External methods
@@ -191,8 +191,10 @@ namespace CryEngine.Flowgraph
 
         internal IntPtr Handle { get; set; }
 
-        public Int32 NodeId { get; set; }
-        public Int64 GraphId { get; set; }
+		[CLSCompliant(false)]
+		public UInt16 NodeId { get; set; }
+		[CLSCompliant(false)]
+        public UInt32 GraphId { get; set; }
 
         public bool ReceiveNodeUpdates { set { NativeFlowNodeMethods.SetRegularlyUpdated(Handle, value); } }
     }

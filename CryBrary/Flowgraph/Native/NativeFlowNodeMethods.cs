@@ -45,6 +45,9 @@ namespace CryEngine.Flowgraph.Native
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern internal static Vec3 GetPortValueVec3(IntPtr nodePtr, int port);
 
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		extern internal static bool IsOutputConnected(IntPtr nodePtr, int port);
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern internal static IntPtr GetTargetEntity(IntPtr nodePtr, out uint entId);
     }

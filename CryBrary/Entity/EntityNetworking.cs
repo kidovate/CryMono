@@ -117,7 +117,7 @@ namespace CryEngine
                 if (methodInfo != null)
                 {
 #if RELEASE
-					if (!method.ContainsAttribute<RemoteInvocationAttribute>())
+					if (!methodInfo.ContainsAttribute<RemoteInvocationAttribute>())
 						return;
 #endif
 
