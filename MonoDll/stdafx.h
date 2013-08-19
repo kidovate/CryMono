@@ -41,9 +41,9 @@
 #endif
 
 #ifdef MONODLL_EXPORTS
-#define CRYMONO_API DLL_EXPORT
+#define MONO_API DLL_EXPORT
 #else
-#define CRYMONO_API
+#define MONO_API
 #endif
 
 //////////////////////////////////////////////////////////////////////////
