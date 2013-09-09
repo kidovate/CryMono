@@ -530,6 +530,7 @@
     <ClInclude Include="MonoCVars.h" />
     <ClInclude Include="MonoDomain.h" />
     <ClInclude Include="MonoEntity.h" />
+    <ClInclude Include="MonoEntityExtensionCreator.h" />
     <ClInclude Include="MonoException.h" />
     <ClInclude Include="MonoFlowNode.h" />
     <ClInclude Include="MonoHelpers.h" />
@@ -539,8 +540,6 @@
     <ClInclude Include="MonoScriptSystem.h" />
     <ClInclude Include="MonoAssembly.h" />
     <ClInclude Include="MonoClass.h" />
-    <ClInclude Include="MonoEntityClass.h" />
-    <ClInclude Include="MonoEntityEventHandler.h" />
     <ClInclude Include="MonoEntityPropertyHandler.h" />
     <ClInclude Include="MonoObject.h" />
     <ClInclude Include="Headers\IMonoScriptSystem.h" />
@@ -586,7 +585,6 @@
     <ClCompile Include="MonoAssembly.cpp" />
     <ClCompile Include="CryMonoDll.cpp" />
     <ClCompile Include="MonoClass.cpp" />
-    <ClCompile Include="MonoEntityClass.cpp" />
     <ClCompile Include="MonoEntityPropertyHandler.cpp" />
     <ClCompile Include="NativeEntity.cpp" />
     <ClCompile Include="Scriptbinds\ActorSystem.cpp" />

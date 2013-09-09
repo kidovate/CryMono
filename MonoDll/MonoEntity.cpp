@@ -59,16 +59,19 @@ bool CMonoEntityExtension::Init(IGameObject *pGameObject)
 	g_pScriptSystem->InitializeScriptInstance(m_pScript, pArgs);
 	pArgs->Release();
 
-	int numProperties;
-	auto pProperties = static_cast<CEntityPropertyHandler *>(pEntityClass->GetPropertyHandler())->GetQueuedProperties(pEntity->GetId(), numProperties);
-
-	if(pProperties)
+	if(IEntityPropertyHandler *pPropertyHandler = pEntityClass->GetPropertyHandler())
 	{
-		for(int i = 0; i < numProperties; i++)
-		{
-			auto queuedProperty = pProperties[i];
+		int numProperties;
+		auto pProperties = static_cast<CEntityPropertyHandler *>(pPropertyHandler)->GetQueuedProperties(pEntity->GetId(), numProperties);
 
-			SetPropertyValue(queuedProperty.propertyInfo, queuedProperty.value.c_str());
+		if(pProperties)
+		{
+			for(int i = 0; i < numProperties; i++)
+			{
+				auto queuedProperty = pProperties[i];
+
+				SetPropertyValue(queuedProperty.propertyInfo, queuedProperty.value.c_str());
+			}
 		}
 	}
 
@@ -119,25 +122,27 @@ void CMonoEntityExtension::FullSerialize(TSerialize ser)
 	IEntity *pEntity = GetEntity();
 
 	ser.BeginGroup("Properties");
-	auto pPropertyHandler = static_cast<CEntityPropertyHandler *>(pEntity->GetClass()->GetPropertyHandler());
-	for(int i = 0; i < pPropertyHandler->GetPropertyCount(); i++)
+	if(auto pPropertyHandler = pEntity->GetClass()->GetPropertyHandler())
 	{
-		if(ser.IsWriting())
+		for(int i = 0; i < pPropertyHandler->GetPropertyCount(); i++)
 		{
-			IEntityPropertyHandler::SPropertyInfo propertyInfo;
-			pPropertyHandler->GetPropertyInfo(i, propertyInfo);
+			if(ser.IsWriting())
+			{
+				IEntityPropertyHandler::SPropertyInfo propertyInfo;
+				pPropertyHandler->GetPropertyInfo(i, propertyInfo);
 
-			ser.Value(propertyInfo.name, pPropertyHandler->GetProperty(pEntity, i));
-		}
-		else
-		{
-			IEntityPropertyHandler::SPropertyInfo propertyInfo;
-			pPropertyHandler->GetPropertyInfo(i, propertyInfo);
+				ser.Value(propertyInfo.name, pPropertyHandler->GetProperty(pEntity, i));
+			}
+			else
+			{
+				IEntityPropertyHandler::SPropertyInfo propertyInfo;
+				pPropertyHandler->GetPropertyInfo(i, propertyInfo);
 
-			char *propertyValue = nullptr;
-			ser.ValueChar(propertyInfo.name, propertyValue, 0);
+				char *propertyValue = nullptr;
+				ser.ValueChar(propertyInfo.name, propertyValue, 0);
 
-			pPropertyHandler->SetProperty(pEntity, i, propertyValue);
+				pPropertyHandler->SetProperty(pEntity, i, propertyValue);
+			}
 		}
 	}
 

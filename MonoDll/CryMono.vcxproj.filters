@@ -12,12 +12,6 @@
       <Filter>Wrappers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="MonoEntityClass.h">
-      <Filter>EntitySystem</Filter>
-    </ClInclude>
-    <ClInclude Include="MonoEntityEventHandler.h">
-      <Filter>EntitySystem</Filter>
-    </ClInclude>
     <ClInclude Include="MonoObject.h">
       <Filter>Wrappers</Filter>
     </ClInclude>
@@ -166,6 +160,9 @@
     <ClInclude Include="Scriptbinds\CryPak.h">
       <Filter>ScriptBinds\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="MonoEntityExtensionCreator.h">
+      <Filter>EntitySystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -174,9 +171,6 @@
     </ClCompile>
     <ClCompile Include="MonoClass.cpp">
       <Filter>Wrappers</Filter>
-    </ClCompile>
-    <ClCompile Include="MonoEntityClass.cpp">
-      <Filter>EntitySystem</Filter>
     </ClCompile>
     <ClCompile Include="MonoEntityPropertyHandler.cpp">
       <Filter>EntitySystem</Filter>

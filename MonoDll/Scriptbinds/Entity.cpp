@@ -3,7 +3,6 @@
 
 #include "MonoEntity.h"
 #include "NativeEntity.h"
-#include "MonoEntityClass.h"
 #include "MonoEntityPropertyHandler.h"
 
 #include "MonoScriptSystem.h"
@@ -22,7 +21,7 @@
 #include <IGameObject.h>
 #include <IGameFramework.h>
 
-std::vector<const char *> CScriptbind_Entity::m_monoEntityClasses = std::vector<const char *>();
+CMonoEntityExtensionCreator *CScriptbind_Entity::m_pEntityExtensionCreator = nullptr;
 
 IMonoClass *CScriptbind_Entity::m_pEntityClass = nullptr;
 
@@ -177,7 +176,9 @@ CScriptbind_Entity::CScriptbind_Entity()
 
 	g_pScriptSystem->AddListener(this);
 
-	gEnv->pEntitySystem->AddSink(this, IEntitySystem::OnSpawn | IEntitySystem::OnRemove, 0);
+	gEnv->pEntitySystem->AddSink(this, IEntitySystem::OnRemove, 0);
+
+	m_pEntityExtensionCreator = new CMonoEntityExtensionCreator();
 }
 
 CScriptbind_Entity::~CScriptbind_Entity()
@@ -187,7 +188,8 @@ CScriptbind_Entity::~CScriptbind_Entity()
 	else
 		MonoWarning("Failed to unregister CScriptbind_Entity entity sink!");
 
-	m_monoEntityClasses.clear();
+	delete m_pEntityExtensionCreator;
+	m_pEntityExtensionCreator = nullptr;
 }
 
 void CScriptbind_Entity::OnReloadComplete()
@@ -260,30 +262,6 @@ void CScriptbind_Entity::StopAnimationsInAllLayers(IEntity *pEntity, int slot)
 	pSkeletonAnim->StopAnimationsAllLayers();
 }
 
-bool CScriptbind_Entity::IsMonoEntity(const char *className)
-{
-	for each(auto entityClass in m_monoEntityClasses)
-	{
-		if(!strcmp(entityClass, className))
-			return true;
-	}
-
-	return false;
-}
-
-void CScriptbind_Entity::OnSpawn(IEntity *pEntity,SEntitySpawnParams &params)
-{
-	const char *className = params.pClass->GetName();
-	if(!IsMonoEntity(className))// && strcmp(className, "[NativeEntity]"))
-		return;
-
-	auto gameObject = g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->CreateGameObjectForEntity(pEntity->GetId());
-	if(!gameObject->ActivateExtension(className))
-	{
-		MonoWarning("[CryMono] Failed to activate game object extension %s on entity %i (%s)", className, params.id, params.sName);
-	}
-}
-
 bool CScriptbind_Entity::OnRemove(IEntity *pIEntity)
 {
 	IMonoArray *pArgs = CreateMonoArray(1);
@@ -299,13 +277,6 @@ bool CScriptbind_Entity::OnRemove(IEntity *pIEntity)
 
 	return true;
 }
-
-struct SMonoEntityCreator
-	: public IGameObjectExtensionCreatorBase
-{
-	virtual IGameObjectExtension *Create() { return new CMonoEntityExtension(); }
-	virtual void GetGameObjectExtensionRMIData(void **ppRMI, size_t *nCount) { return CMonoEntityExtension::GetGameObjectExtensionRMIData(ppRMI, nCount); }
-};
 
 bool CScriptbind_Entity::RegisterEntityClass(SEntityRegistrationParams params)
 {
@@ -359,14 +330,12 @@ bool CScriptbind_Entity::RegisterEntityClass(SEntityRegistrationParams params)
 	if(params.EditorIcon != nullptr)
 		entityClassDesc.editorClassInfo.sIcon = ToCryString(params.EditorIcon);
 
-	m_monoEntityClasses.push_back(className);
+	if(numProperties > 0)
+		entityClassDesc.pPropertyHandler = new CEntityPropertyHandler(pProperties, numProperties);
 
-	bool result = gEnv->pEntitySystem->GetClassRegistry()->RegisterClass(new CEntityClass(entityClassDesc, pProperties, numProperties));
+	g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->RegisterExtension(className, m_pEntityExtensionCreator, &entityClassDesc);
 
-	static SMonoEntityCreator creator;
-	g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->RegisterExtension(className, &creator, nullptr);
-
-	return result;
+	return true;
 }
 
 mono::string CScriptbind_Entity::GetEntityClassName(IEntity *pEntity)

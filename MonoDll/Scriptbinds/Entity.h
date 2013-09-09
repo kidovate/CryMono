@@ -12,10 +12,9 @@
 
 #include "MonoCommon.h"
 #include <IMonoArray.h>
-
 #include <IMonoScriptBind.h>
 
-#include <mono\mini\jit.h>
+#include "MonoEntityExtensionCreator.h"
 
 #include <IEntitySystem.h>
 #include <IBreakableManager.h>
@@ -159,7 +158,7 @@ public:
 
 	// IEntitySystemSink
 	virtual bool OnBeforeSpawn(SEntitySpawnParams &params) { return true; }
-	virtual void OnSpawn(IEntity *pEntity,SEntitySpawnParams &params);
+	virtual void OnSpawn(IEntity *pEntity,SEntitySpawnParams &params) {}
 	virtual bool OnRemove(IEntity *pEntity);
 	virtual void OnReused( IEntity *pEntity, SEntitySpawnParams &params) {}
 	virtual void OnEvent(IEntity *pEntity, SEntityEvent &event) {}
@@ -184,8 +183,6 @@ protected:
 	static void PlayAnimation(IEntity *pEnt, mono::string animationName, int slot, int layer, float blend, float speed, EAnimationFlags flags);
 	static void StopAnimationInLayer(IEntity *pEnt, int slot, int layer, float blendOutTime);
 	static void StopAnimationsInAllLayers(IEntity *pEnt, int slot);
-
-	bool IsMonoEntity(const char *className);
 
 	// Scriptbinds
 	static mono::object SpawnEntity(EntitySpawnParams, bool, SMonoEntityInfo &entityInfo);
@@ -332,7 +329,8 @@ protected:
 	static int GetAreaPriority(IArea *pArea);
 	// ~Area manager scriptbinds
 
-	static std::vector<const char *> m_monoEntityClasses;
+	static CMonoEntityExtensionCreator *m_pEntityExtensionCreator;
+
 	static IMonoClass *m_pEntityClass;
 };
 
