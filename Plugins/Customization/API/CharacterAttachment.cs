@@ -16,7 +16,7 @@ namespace CryEngine.CharacterCustomization
 			if (element == null)
 			{
 				Name = "None";
-				ThumbnailPath = "Objects/Characters/Attachments/thumb_empty.dds";
+                ThumbnailPath = slot.Manager.InitParameters.EmptyThumbnailPath;
 			}
 			else
 			{

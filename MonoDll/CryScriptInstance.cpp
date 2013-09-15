@@ -26,7 +26,7 @@ void CCryScriptInstance::SetManagedObject(MonoObject *newObject, bool allowGC)
 {
 	CScriptObject::SetManagedObject(newObject, allowGC);
 
-	IMonoObject *pScriptIdResult = *GetPropertyValue("ScriptId");
+	IMonoObject *pScriptIdResult = *CScriptObject::GetPropertyValue("ScriptId");
 	m_scriptId = pScriptIdResult->Unbox<int>();
 	pScriptIdResult->Release();
 }

@@ -29,10 +29,6 @@ namespace CryEngine.Compilers.NET
             }
 
 			var compileScriptsCVar = CVar.Get("mono_compileScripts");
-			if (compileScriptsCVar == null)
-				Debug.LogAlways("mono_compileScripts was null");
-			else
-				Debug.LogAlways("mono_compileScripts was {0}", compileScriptsCVar.IVal);
 
 			if (compileScriptsCVar != null && compileScriptsCVar.IVal != 0)
 			{

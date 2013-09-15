@@ -207,9 +207,8 @@ namespace CryEngine.CharacterCustomization
 						stringChars[i] = chars[CustomizationManager.Selector.Next(chars.Length)];
 
 					var fileName = new string(stringChars);
-					Debug.LogAlways("{0} generated {1}", BaseFilePath, fileName);
 
-					FilePath = Path.Combine("%USER%", "Cosmetics", "Materials", Attachment.Slot.Name, Attachment.Name ?? "unknown", fileName);
+                    FilePath = Path.Combine(Attachment.Slot.Manager.InitParameters.TempDirectory, "Materials", Attachment.Slot.Name, Attachment.Name ?? "unknown", fileName);
 				}
 
 				var fullFilePath = CryPak.AdjustFileName(FilePath, PathResolutionRules.RealPath | PathResolutionRules.ForWriting) + ".mtl";
@@ -228,14 +227,10 @@ namespace CryEngine.CharacterCustomization
 					file.Close();
 				}
 
-				Debug.LogAlways("Writing {0} to {1}", BaseFilePath, fullFilePath);
 				materialDocument.Save(fullFilePath);
 			}
 			else
-			{
-				Debug.LogAlways("Material {0} was not modified, using original path", BaseFilePath);
 				FilePath = BaseFilePath;
-			}
 		}
 
 		bool WriteTexture(XElement texturesElement, string textureType, string texturePath)

@@ -13,10 +13,18 @@ namespace CryEngine.CharacterCustomization
     {
         internal CharacterAttachmentSlot(CustomizationManager manager, XElement element)
         {
-			m_manager = manager;
+            Manager = manager;
             Element = element;
 
             Name = element.Attribute("name").Value;
+
+            var uiNameAttribute = element.Attribute("uiName");
+            if(uiNameAttribute != null)
+                UIName = uiNameAttribute.Value;
+
+            var categoryAttribute = element.Attribute("category");
+            if (categoryAttribute != null)
+                Category = categoryAttribute.Value;
 
             var allowNoneAttribute = element.Attribute("allowNone");
             if(allowNoneAttribute != null)
@@ -181,7 +189,7 @@ namespace CryEngine.CharacterCustomization
 
 		XElement GetWriteableElement(string name = null)
 		{
-			var attachmentList = m_manager.CharacterDefinition.Element("CharacterDefinition").Element("AttachmentList");
+            var attachmentList = Manager.CharacterDefinition.Element("CharacterDefinition").Element("AttachmentList");
 			var attachmentElements = attachmentList.Elements("Attachment");
 
 			if (name == null)
@@ -191,6 +199,10 @@ namespace CryEngine.CharacterCustomization
 		}
 
         public string Name { get; set; }
+
+        public string UIName { get; set; }
+
+        public string Category { get; set; }
 
 		/// <summary>
 		/// Brands containing attachments.
@@ -204,7 +216,7 @@ namespace CryEngine.CharacterCustomization
         {
             get
             {
-				var attachmentList = m_manager.CharacterDefinition.Element("CharacterDefinition").Element("AttachmentList");
+                var attachmentList = Manager.CharacterDefinition.Element("CharacterDefinition").Element("AttachmentList");
 
                 var attachmentElements = attachmentList.Elements("Attachment");
 				var attachmentElement = attachmentElements.FirstOrDefault(x => x.Attribute("AName").Value == Name);
@@ -261,6 +273,6 @@ namespace CryEngine.CharacterCustomization
 
         public bool Hidden { get; set; }
 
-		CustomizationManager m_manager;
+        public CustomizationManager Manager { get; set; }
     }
 }

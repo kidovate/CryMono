@@ -202,7 +202,7 @@ void CMonoActor::PostUpdate(float frameTime)
 		m_pScript->CallMethod("OnPostUpdate");
 }
 
-void CMonoActor::OnScriptInstanceInitialized(IMonoObject *pScriptInstance)
+void CMonoActor::OnScriptInstanceInitialized(ICryScriptInstance *pScriptInstance)
 {
 	mono::object pIdResult = pScriptInstance->GetPropertyValue("Id", false);
 	if(pIdResult)

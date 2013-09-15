@@ -22,7 +22,7 @@ using CryEngine.Flowgraph;
 
 namespace CryEngine.Initialization
 {
-    class ScriptManager
+    public class ScriptManager
     {
         public ScriptManager(bool initialLoad = true, string configPath = "")
         { 

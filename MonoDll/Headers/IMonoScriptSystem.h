@@ -27,6 +27,8 @@ struct IMonoEntityManager;
 struct IMonoConverter;
 struct IMonoScriptEventListener;
 
+struct ICryScriptInstance;
+
 struct IGameFramework;
 
 /// <summary>
@@ -98,8 +100,9 @@ struct IMonoScriptSystem
 	/// <summary>
 	/// Instantiates a script (with constructor parameters if supplied) of type and name
 	/// This assumes that the script was present in a .dll in Plugins or within a .cs file when PostInit was called.
+	//  Note: ICryScriptInstance can also be casted to IMonoObject.
 	/// </summary>
-	virtual IMonoObject *InstantiateScript(const char *scriptName, EMonoScriptFlags scriptType = eScriptFlag_Any, IMonoArray *pConstructorParameters = nullptr, bool throwOnFail = true) = 0;
+	virtual ICryScriptInstance *InstantiateScript(const char *scriptName, EMonoScriptFlags scriptType = eScriptFlag_Any, IMonoArray *pConstructorParameters = nullptr, bool throwOnFail = true) = 0;
 	/// <summary>
 	/// Removes and destructs an instantiated script with the supplied id if found.
 	/// </summary>
@@ -165,9 +168,9 @@ struct IMonoScriptEventListener
 	virtual void OnReloadStart() = 0;
 	virtual void OnReloadComplete() = 0;
 
-	virtual void OnScriptInstanceCreated(const char *scriptName, EMonoScriptFlags scriptType, IMonoObject *pScriptInstance) = 0;
-	virtual void OnScriptInstanceInitialized(IMonoObject *pScriptInstance) = 0;
-	virtual void OnScriptInstanceReleased(IMonoObject *pScriptInstance, int scriptId) = 0;
+	virtual void OnScriptInstanceCreated(const char *scriptName, EMonoScriptFlags scriptType, ICryScriptInstance *pScriptInstance) = 0;
+	virtual void OnScriptInstanceInitialized(ICryScriptInstance *pScriptInstance) = 0;
+	virtual void OnScriptInstanceReleased(ICryScriptInstance *pScriptInstance, int scriptId) = 0;
 
 	/// <summary>
 	/// Called when the script system commences shutting down

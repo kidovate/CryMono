@@ -17,12 +17,12 @@ namespace CryEngine.Flowgraph
 			NativeFlowNodeMethods.RegisterNode(typeName);
 		}
 
-		internal static void InternalRemove(UInt16 nodeId, UInt32 graphId)
+		internal static void InternalRemove(int scriptId)
 		{
 			ScriptManager.Instance.RemoveInstances(ScriptType.FlowNode, instance =>
 			{
 				var node = instance as FlowNode;
-				if (node != null && node.NodeId == nodeId && node.GraphId == graphId)
+                if (node != null && node.ScriptId == scriptId)
 				{
 					node.OnRemove();
 

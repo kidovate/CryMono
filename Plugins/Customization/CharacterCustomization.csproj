@@ -100,6 +100,7 @@
     <Compile Include="API\CharacterAttachment.cs" />
     <Compile Include="API\CharacterAttachmentMaterial.cs" />
     <Compile Include="API\CharacterAttachmentSlot.cs" />
+    <Compile Include="CustomizationInitializationParameters.cs" />
     <Compile Include="CustomizationManager.cs" />
     <Compile Include="Exceptions\CustomizationConfigurationException.cs" />
   </ItemGroup>

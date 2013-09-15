@@ -88,6 +88,6 @@ bool CScriptbind_Input::OnActionTriggered(EntityId entityId, const ActionId& act
 // Scriptbinds
 void CScriptbind_Input::RegisterAction(mono::string actionName)
 {
-	if(!s_actionHandler.GetHandler(ToCryString(actionName)))
-		s_actionHandler.AddHandler(ToCryString(actionName), &CScriptbind_Input::OnActionTriggered);
+	if(!s_actionHandler.GetHandler(ActionId(ToCryString(actionName))))
+		s_actionHandler.AddHandler(ActionId(ToCryString(actionName)), &CScriptbind_Input::OnActionTriggered);
 }

@@ -20,6 +20,8 @@
 
 #include "FlowBaseNode.h"
 
+#include <ICryScriptInstance.h>
+
 struct IMonoArray;
 
 class CMonoFlowNode 
@@ -65,7 +67,7 @@ public:
 	IEntity *GetTargetEntity();
 
 	IMonoObject *GetScript() const { return m_pScript; }
-	void SetScript(IMonoObject *pScript) { m_pScript = pScript; }
+	void SetScript(ICryScriptInstance *pScript) { m_pScript = pScript; }
 
 	inline void SetRegularlyUpdated(bool update) { m_pActInfo->pGraph->SetRegularlyUpdated(m_pActInfo->myID, update); }
 
@@ -90,7 +92,8 @@ private:
 	TFlowNodeId m_id;
 	TFlowGraphId m_graphId;
 
-	IMonoObject *m_pScript;
+	ICryScriptInstance *m_pScript;
+	int m_scriptId;
 
 	ENodeCloneType m_cloneType;
 

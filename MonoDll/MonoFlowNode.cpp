@@ -18,6 +18,7 @@ CMonoFlowNode::CMonoFlowNode(SActivationInfo *pActInfo)
 	, m_pActInfo(pActInfo)
 	, m_cloneType(eNCT_Instanced)
 	, m_flags(0)
+	, m_scriptId(-1)
 {
 	// We *have* to get the id right away or inputs won't work, so lets use this fugly solution.
 	pActInfo->pGraph->RegisterHook(this);
@@ -29,9 +30,8 @@ CMonoFlowNode::~CMonoFlowNode()
 {
 	IMonoClass *pFlowNodeClass = g_pScriptSystem->GetCryBraryAssembly()->GetClass("FlowNode", "CryEngine.Flowgraph");
 
-	IMonoArray *pParams = CreateMonoArray(2);
-	pParams->Insert(m_id);
-	pParams->Insert(m_graphId);
+	IMonoArray *pParams = CreateMonoArray(1);
+	pParams->Insert(m_scriptId);
 
 	pFlowNodeClass->InvokeArray(nullptr, "InternalRemove", pParams);
 }
@@ -45,7 +45,7 @@ bool CMonoFlowNode::CreatedNode(TFlowNodeId id, const char *name, TFlowNodeTypeI
 
 		const char *typeName = gEnv->pFlowSystem->GetTypeName(typeId);
 
-		IMonoObject *pScript = g_pScriptSystem->InstantiateScript(gEnv->pFlowSystem->GetTypeName(typeId), eScriptFlag_FlowNode);
+		ICryScriptInstance *pScript = g_pScriptSystem->InstantiateScript(gEnv->pFlowSystem->GetTypeName(typeId), eScriptFlag_FlowNode);
 
 		IMonoClass *pNodeInfo = g_pScriptSystem->GetCryBraryAssembly()->GetClass("NodeInitializationParams", "CryEngine.Flowgraph.Native");
 		
@@ -56,6 +56,8 @@ bool CMonoFlowNode::CreatedNode(TFlowNodeId id, const char *name, TFlowNodeTypeI
 		pArgs->Release();
 		
 		m_pScript = pScript;
+		m_scriptId = pScript->GetId();
+
 		if(result)
 		{
 			IMonoObject *pResult = *result;
@@ -202,12 +204,8 @@ void CMonoFlowNode::GetConfiguration(SFlowNodeConfig &config)
 			SAFE_RELEASE(pInputObject);
 		}
 
-#ifdef CRYENGINE_3_4_3
 		SInputPortConfig nullInputPortConfig = {0};
 		pInputs[numInputs] = nullInputPortConfig;
-#else
-		pInputs[numInputs] = InputPortConfig_Null();
-#endif
 
 		config.pInputPorts = pInputs;
 
@@ -225,12 +223,8 @@ void CMonoFlowNode::GetConfiguration(SFlowNodeConfig &config)
 			SAFE_RELEASE(pOutputObject);
 		}
 
-#ifdef CRYENGINE_3_4_3
 		SOutputPortConfig nullOutputPortConfig = {0};
 		pOutputs[numOutputs] = nullOutputPortConfig;
-#else
-		pOutputs[numOutputs] = OutputPortConfig_Null();
-#endif
 
 		config.pOutputPorts = pOutputs;
 

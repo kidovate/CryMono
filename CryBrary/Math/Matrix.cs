@@ -930,6 +930,25 @@ namespace CryEngine
         {
             return new Matrix33(m);
         }
+        
+        public static Matrix34 operator *(Matrix34 l, Matrix34 r)
+        {
+            var m = new Matrix34();
+            m.M00 = l.M00 * r.M00 + l.M01 * r.M10 + l.M02 * r.M20;
+            m.M10 = l.M10 * r.M00 + l.M11 * r.M10 + l.M12 * r.M20;
+            m.M20 = l.M20 * r.M00 + l.M21 * r.M10 + l.M22 * r.M20;
+            m.M01 = l.M00 * r.M01 + l.M01 * r.M11 + l.M02 * r.M21;
+            m.M11 = l.M10 * r.M01 + l.M11 * r.M11 + l.M12 * r.M21;
+            m.M21 = l.M20 * r.M01 + l.M21 * r.M11 + l.M22 * r.M21;
+            m.M02 = l.M00 * r.M02 + l.M01 * r.M12 + l.M02 * r.M22;
+            m.M12 = l.M10 * r.M02 + l.M11 * r.M12 + l.M12 * r.M22;
+            m.M22 = l.M20 * r.M02 + l.M21 * r.M12 + l.M22 * r.M22;
+            m.M03 = l.M00 * r.M03 + l.M01 * r.M13 + l.M02 * r.M23 + l.M03;
+            m.M13 = l.M10 * r.M03 + l.M11 * r.M13 + l.M12 * r.M23 + l.M13;
+            m.M23 = l.M20 * r.M03 + l.M21 * r.M13 + l.M22 * r.M23 + l.M23;
+
+            return m;
+        }
         #endregion
     }
 }

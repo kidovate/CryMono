@@ -61,7 +61,7 @@ public:
 
 	virtual void RegisterMethodBinding(const void *method, const char *fullMethodName) override;
 
-	virtual IMonoObject *InstantiateScript(const char *scriptName, EMonoScriptFlags scriptType = eScriptFlag_Any, IMonoArray *pConstructorParameters = nullptr, bool throwOnFail = true) override;
+	virtual ICryScriptInstance *InstantiateScript(const char *scriptName, EMonoScriptFlags scriptType = eScriptFlag_Any, IMonoArray *pConstructorParameters = nullptr, bool throwOnFail = true) override;
 	virtual void RemoveScriptInstance(int id, EMonoScriptFlags scriptType = eScriptFlag_Any) override;
 	
 	virtual IMonoObject *GetScriptManager() override { return m_pScriptManager; }
@@ -102,8 +102,8 @@ public:
 
 	void EraseBinding(IMonoScriptBind *pScriptBind);
 
-	mono::object InitializeScriptInstance(IMonoObject *pScriptInstance, IMonoArray *pParams); 
-	void ReportScriptInstanceDestroyed(IMonoObject *pScriptInstance, int scriptId);
+	mono::object InitializeScriptInstance(ICryScriptInstance *pScriptInstance, IMonoArray *pParams); 
+	void ReportScriptInstanceDestroyed(ICryScriptInstance *pScriptInstance, int scriptId);
 
 	bool DetectedChanges() { return m_bDetectedChanges; }
 

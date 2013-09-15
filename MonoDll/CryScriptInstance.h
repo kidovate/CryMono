@@ -4,9 +4,12 @@
 #include "MonoScriptSystem.h"
 #include "MonoObject.h"
 
+#include <ICryScriptInstance.h>
+
 class CCryScriptInstance 
 	: public CScriptObject
 	, public IMonoScriptEventListener
+	, public ICryScriptInstance
 {
 public:
 	CCryScriptInstance(EMonoScriptFlags flags);
@@ -16,9 +19,9 @@ public:
 	virtual void OnReloadStart();
 	virtual void OnReloadComplete();
 
-	virtual void OnScriptInstanceCreated(const char *scriptName, EMonoScriptFlags scriptType, IMonoObject *pScriptInstance) {}
-	virtual void OnScriptInstanceInitialized(IMonoObject *pScriptInstance) {}
-	virtual void OnScriptInstanceReleased(IMonoObject *pScriptInstance, int scriptId) {}
+	virtual void OnScriptInstanceCreated(const char *scriptName, EMonoScriptFlags scriptType, ICryScriptInstance *pScriptInstance) {}
+	virtual void OnScriptInstanceInitialized(ICryScriptInstance *pScriptInstance) {}
+	virtual void OnScriptInstanceReleased(ICryScriptInstance *pScriptInstance, int scriptId) {}
 
 	virtual void OnShutdown() { Release(); }
 	// ~IMonoScriptEventListener
@@ -29,7 +32,30 @@ public:
 	virtual void Release(bool triggerGC = true) override;
 	// ~CScriptObject
 
-	int GetScriptId() { return m_scriptId; }
+	// ICryScriptInstance
+	virtual int GetId() override { return m_scriptId; }
+	// ~ICryScriptInstance
+
+	// IMonoObject
+	virtual EMonoAnyType GetType() override { return CScriptObject::GetType(); }
+
+	virtual MonoAnyValue GetAnyValue() override { return CScriptObject::GetAnyValue(); }
+
+	virtual const char *ToString() override { return CScriptObject::ToString(); }
+	
+	/// <summary>
+	/// Returns the object as it is seen in managed code, can be passed directly across languages.
+	/// </summary>
+	virtual mono::object GetManagedObject() override { return CScriptObject::GetManagedObject(); }
+
+	virtual IMonoClass *GetClass() override { return CScriptObject::GetClass(); }
+
+	/// <summary>
+	/// Unboxes the object and returns it as a void pointer. (Use Unbox() method to easily cast to the C++ type)
+	/// </summary>
+	virtual void *UnboxObject() override { return CScriptObject::UnboxObject(); }
+	//  ~IMonoObject
+	//IMonoObject
 
 private:
 	int m_scriptId;

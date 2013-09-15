@@ -15,6 +15,8 @@
 #include <IGameObject.h>
 #include <IAnimatedCharacter.h>
 
+#include <ICryScriptInstance.h>
+
 struct SMonoColliderInfo
 {
 	SMonoColliderInfo(EventPhysCollision *pCollision, int i)
@@ -109,7 +111,7 @@ public:
 	void Reset(bool enteringGamemode);
 
 protected:
-	IMonoObject *m_pScript;
+	ICryScriptInstance *m_pScript;
 
 	IAnimatedCharacter *m_pAnimatedCharacter;
 

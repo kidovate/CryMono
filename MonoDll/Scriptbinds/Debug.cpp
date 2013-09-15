@@ -58,7 +58,7 @@ void CScriptbind_Debug::AddAABB(Vec3 pos, AABB aabb, ColorF clr, float timeout)
 {
 	GetIPersistentDebug()->Begin("TestAddAABB", false);
 #ifndef CRYENGINE_3_4_3
-	GetIPersistentDebug()->AddAABB(pos, aabb, clr, timeout);
+	GetIPersistentDebug()->AddAABB(aabb.min + pos, aabb.max + pos, clr, timeout);
 #endif
 }
 

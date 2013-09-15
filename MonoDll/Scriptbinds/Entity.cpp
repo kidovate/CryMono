@@ -3,6 +3,7 @@
 
 #include "MonoEntity.h"
 #include "NativeEntity.h"
+#include "MonoEntityClass.h"
 #include "MonoEntityPropertyHandler.h"
 
 #include "MonoScriptSystem.h"
@@ -21,7 +22,7 @@
 #include <IGameObject.h>
 #include <IGameFramework.h>
 
-CMonoEntityExtensionCreator *CScriptbind_Entity::m_pEntityExtensionCreator = nullptr;
+std::vector<const char *> CScriptbind_Entity::m_monoEntityClasses = std::vector<const char *>();
 
 IMonoClass *CScriptbind_Entity::m_pEntityClass = nullptr;
 
@@ -176,9 +177,7 @@ CScriptbind_Entity::CScriptbind_Entity()
 
 	g_pScriptSystem->AddListener(this);
 
-	gEnv->pEntitySystem->AddSink(this, IEntitySystem::OnRemove, 0);
-
-	m_pEntityExtensionCreator = new CMonoEntityExtensionCreator();
+	gEnv->pEntitySystem->AddSink(this, IEntitySystem::OnSpawn | IEntitySystem::OnRemove, 0);
 }
 
 CScriptbind_Entity::~CScriptbind_Entity()
@@ -188,8 +187,7 @@ CScriptbind_Entity::~CScriptbind_Entity()
 	else
 		MonoWarning("Failed to unregister CScriptbind_Entity entity sink!");
 
-	delete m_pEntityExtensionCreator;
-	m_pEntityExtensionCreator = nullptr;
+	m_monoEntityClasses.clear();
 }
 
 void CScriptbind_Entity::OnReloadComplete()
@@ -262,6 +260,30 @@ void CScriptbind_Entity::StopAnimationsInAllLayers(IEntity *pEntity, int slot)
 	pSkeletonAnim->StopAnimationsAllLayers();
 }
 
+bool CScriptbind_Entity::IsMonoEntity(const char *className)
+{
+	for each(auto entityClass in m_monoEntityClasses)
+	{
+		if(!strcmp(entityClass, className))
+			return true;
+	}
+
+	return false;
+}
+
+void CScriptbind_Entity::OnSpawn(IEntity *pEntity,SEntitySpawnParams &params)
+{
+	const char *className = params.pClass->GetName();
+	if(!IsMonoEntity(className))// && strcmp(className, "[NativeEntity]"))
+		return;
+
+	auto gameObject = g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->CreateGameObjectForEntity(pEntity->GetId());
+	if(!gameObject->ActivateExtension(className))
+	{
+		MonoWarning("[CryMono] Failed to activate game object extension %s on entity %i (%s)", className, params.id, params.sName);
+	}
+}
+
 bool CScriptbind_Entity::OnRemove(IEntity *pIEntity)
 {
 	IMonoArray *pArgs = CreateMonoArray(1);
@@ -277,6 +299,13 @@ bool CScriptbind_Entity::OnRemove(IEntity *pIEntity)
 
 	return true;
 }
+
+struct SMonoEntityCreator
+	: public IGameObjectExtensionCreatorBase
+{
+	virtual IGameObjectExtension *Create() { return new CMonoEntityExtension(); }
+	virtual void GetGameObjectExtensionRMIData(void **ppRMI, size_t *nCount) { return CMonoEntityExtension::GetGameObjectExtensionRMIData(ppRMI, nCount); }
+};
 
 bool CScriptbind_Entity::RegisterEntityClass(SEntityRegistrationParams params)
 {
@@ -330,12 +359,14 @@ bool CScriptbind_Entity::RegisterEntityClass(SEntityRegistrationParams params)
 	if(params.EditorIcon != nullptr)
 		entityClassDesc.editorClassInfo.sIcon = ToCryString(params.EditorIcon);
 
-	if(numProperties > 0)
-		entityClassDesc.pPropertyHandler = new CEntityPropertyHandler(pProperties, numProperties);
+	m_monoEntityClasses.push_back(className);
 
-	g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->RegisterExtension(className, m_pEntityExtensionCreator, &entityClassDesc);
+	bool result = gEnv->pEntitySystem->GetClassRegistry()->RegisterClass(new CEntityClass(entityClassDesc, pProperties, numProperties));
 
-	return true;
+	static SMonoEntityCreator creator;
+	g_pScriptSystem->GetIGameFramework()->GetIGameObjectSystem()->RegisterExtension(className, &creator, nullptr);
+
+	return result;
 }
 
 mono::string CScriptbind_Entity::GetEntityClassName(IEntity *pEntity)
@@ -678,11 +709,7 @@ void CScriptbind_Entity::SetHUDSilhouettesParams(IEntity *pEntity, float r, floa
 
 IEntityLink *CScriptbind_Entity::AddEntityLink(IEntity *pEntity, mono::string linkName, EntityId otherId, Quat relativeRot, Vec3 relativePos)
 {
-#ifndef CRYENGINE_3_4_3
-	return pEntity->AddEntityLink(ToCryString(linkName), otherId, 0, relativeRot, relativePos);
-#else
 	return pEntity->AddEntityLink(ToCryString(linkName), otherId, relativeRot, relativePos);
-#endif
 }
 
 mono::object CScriptbind_Entity::GetEntityLinks(IEntity *pEntity)
@@ -765,11 +792,6 @@ int CScriptbind_Entity::LoadLight(IEntity *pEntity, int slot, SMonoLightParams p
 		if(strcmp(lightImage, ""))
 			light.m_pLightImage = gEnv->pRenderer->EF_LoadTexture(lightImage);
 	}
-	if(const char *lightAttenMap = ToCryString(params.lightAttenMap))
-	{
-		if(strcmp(lightAttenMap, ""))
-			light.SetLightAttenMap(gEnv->pRenderer->EF_LoadTexture(lightAttenMap));
-	}
 
 	light.SetLightColor(params.color);
 	light.SetPosition(params.origin);
@@ -781,18 +803,6 @@ int CScriptbind_Entity::LoadLight(IEntity *pEntity, int slot, SMonoLightParams p
 
 	light.m_fHDRDynamic = params.hdrDynamic;
 
-	light.m_fAnimSpeed = params.animSpeed;
-	light.m_fCoronaScale = params.coronaScale;
-	light.m_fCoronaIntensity = params.coronaIntensity;
-	light.m_fCoronaDistSizeFactor = params.coronaDistSizeFactor;
-	light.m_fCoronaDistIntensityFactor = params.coronaDistIntensityFactor;
-
-	light.m_fShaftSrcSize = params.shaftSrcSize;
-	light.m_fShaftLength = params.shaftLength;
-	light.m_fShaftBrightness = params.shaftBrightness;
-	light.m_fShaftBlendFactor = params.shaftBlendFactor;
-	light.m_fShaftDecayFactor = params.shaftDecayFactor;
-
 	light.m_fLightFrustumAngle = params.lightFrustumAngle;
 
 	light.m_fShadowUpdateMinRadius = params.shadowUpdateMinRadius;
@@ -801,7 +811,6 @@ int CScriptbind_Entity::LoadLight(IEntity *pEntity, int slot, SMonoLightParams p
 
 	light.m_nLightStyle = params.lightStyle;
 	light.m_nLightPhase = params.lightPhase;
-	light.m_nPostEffect = params.postEffect;
 	light.m_ShadowChanMask = params.shadowChanMask;
 
 	return pEntity->LoadLight(slot, &light);
@@ -860,20 +869,20 @@ CCGFAttachment *CScriptbind_Entity::BindAttachmentToCGF(IAttachment *pAttachment
 
 	CCGFAttachment *pCGFAttachment = new CCGFAttachment();
 	pCGFAttachment->pObj = gEnv->p3DEngine->LoadStatObj(ToCryString(cgf));
-	pCGFAttachment->pMaterial = pMaterial;
+	pCGFAttachment->SetReplacementMaterial(pMaterial);
 
 	pAttachment->AddBinding(pCGFAttachment);
 
 	return pCGFAttachment;
 }
 
-CCHRAttachment *CScriptbind_Entity::BindAttachmentToCHR(IAttachment *pAttachment, mono::string chr, IMaterial *pMaterial)
+CSKELAttachment *CScriptbind_Entity::BindAttachmentToCHR(IAttachment *pAttachment, mono::string chr, IMaterial *pMaterial)
 {
 	pAttachment->ClearBinding();
 
-	CCHRAttachment *pCHRAttachment = new CCHRAttachment();
+	CSKELAttachment *pCHRAttachment = new CSKELAttachment();
 	pCHRAttachment->m_pCharInstance = gEnv->pCharacterManager->CreateInstance(ToCryString(chr));
-	pCHRAttachment->m_pMaterial = pMaterial;
+	pCHRAttachment->SetReplacementMaterial(pMaterial, 0);
 
 	pAttachment->AddBinding(pCHRAttachment);
 
@@ -885,9 +894,9 @@ class CMonoEntityAttachment : public CEntityAttachment
 public:
 	CMonoEntityAttachment() {}
 
-	virtual void UpdateAttachment(IAttachment *pIAttachment,const QuatT &m, float fZoomAdjustedDistanceFromCamera, uint32 OnRender ) override
+	virtual void ProcessAttachment(IAttachment *pIAttachment) override
 	{
-		const QuatT& quatT = pIAttachment->GetAttWorldAbsolute();
+		const QuatTS& quatT = pIAttachment->GetAttWorldAbsolute();
 
 		IEntity *pEntity = gEnv->pEntitySystem->GetEntity(GetEntityId());
 		if(pEntity)
@@ -937,7 +946,7 @@ void CScriptbind_Entity::ClearAttachmentBinding(IAttachment *pAttachment)
 
 QuatT CScriptbind_Entity::GetAttachmentAbsolute(IAttachment *pAttachment)
 {
-	return pAttachment->GetAttWorldAbsolute();
+	return QuatT(pAttachment->GetAttWorldAbsolute());
 }
 
 QuatT CScriptbind_Entity::GetAttachmentRelative(IAttachment *pAttachment)
@@ -958,7 +967,7 @@ QuatT CScriptbind_Entity::GetAttachmentDefaultRelative(IAttachment *pAttachment)
 IMaterial *CScriptbind_Entity::GetAttachmentMaterial(IAttachment *pAttachment)
 {
 	if(IAttachmentObject *pObject = pAttachment->GetIAttachmentObject())
-		return pObject->GetMaterial();
+		return pObject->GetBaseMaterial();
 
 	return nullptr;
 }
@@ -966,7 +975,7 @@ IMaterial *CScriptbind_Entity::GetAttachmentMaterial(IAttachment *pAttachment)
 void CScriptbind_Entity::SetAttachmentMaterial(IAttachment *pAttachment, IMaterial *pMaterial)
 {
 	if(IAttachmentObject *pObject = pAttachment->GetIAttachmentObject())
-		pObject->SetMaterial(pMaterial);
+		pObject->SetReplacementMaterial(pMaterial);
 }
 
 mono::string CScriptbind_Entity::GetAttachmentName(IAttachment *pAttachment)
@@ -1064,8 +1073,8 @@ void CScriptbind_Entity::SetJointAbsolute(IEntity *pEntity, mono::string jointNa
 		if(ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose())
 		{
 			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
-			if(id > -1)
-				pSkeletonPose->SetAbsJointByID(id, absolute);
+		//	if(id > -1)
+				//pSkeletonPose->SetAbsJointByID(id, absolute);
 		}
 	}
 }
@@ -1240,7 +1249,7 @@ mono::object CScriptbind_Entity::QueryAreas(Vec3 vPos, int maxResults, bool forc
 {
 	SAreaManagerResult *pResults = new SAreaManagerResult[maxResults];
 
-	gEnv->pEntitySystem->GetAreaManager()->QueryAreas(vPos, pResults, maxResults, forceCalculation);
+	gEnv->pEntitySystem->GetAreaManager()->QueryAreas(0, vPos, pResults, maxResults);
 
 	IMonoArray *pArray = CreateDynamicMonoArray();
 	IMonoClass *pClass = g_pScriptSystem->GetCryBraryAssembly()->GetClass("AreaQueryResult");

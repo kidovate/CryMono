@@ -134,7 +134,7 @@ CScriptSystem::CScriptSystem(IGameFramework *pGameFramework)
 
 	RegisterSecondaryBindings();
 
-	pGameFramework->RegisterListener(this, "CryMono", eFLPriority_Game);
+	pGameFramework->RegisterListener(this, "CryMono", FRAMEWORKLISTENERPRIORITY_GAME);
 
 	gEnv->pSystem->GetISystemEventDispatcher()->RegisterListener(&g_systemEventListener_CryMono);
 
@@ -398,7 +398,7 @@ void CScriptSystem::RegisterMethodBinding(const void *method, const char *fullMe
 		mono_add_internal_call(fullMethodName, method);
 }
 
-IMonoObject *CScriptSystem::InstantiateScript(const char *scriptName, EMonoScriptFlags scriptFlags, IMonoArray *pConstructorParameters, bool throwOnFail)
+ICryScriptInstance *CScriptSystem::InstantiateScript(const char *scriptName, EMonoScriptFlags scriptFlags, IMonoArray *pConstructorParameters, bool throwOnFail)
 {
 	FUNCTION_PROFILER_FAST(GetISystem(), PROFILE_SCRIPT, gEnv->bProfilerEnabled);
 
@@ -446,7 +446,7 @@ void CScriptSystem::RemoveScriptInstance(int id, EMonoScriptFlags scriptType)
 	m_pScriptManager->CallMethod("RemoveInstance", id, scriptType);
 }
 
-mono::object CScriptSystem::InitializeScriptInstance(IMonoObject *pScriptInstance, IMonoArray *pParams)
+mono::object CScriptSystem::InitializeScriptInstance(ICryScriptInstance *pScriptInstance, IMonoArray *pParams)
 {
 	FUNCTION_PROFILER_FAST(GetISystem(), PROFILE_SCRIPT, gEnv->bProfilerEnabled);
 
@@ -460,7 +460,7 @@ mono::object CScriptSystem::InitializeScriptInstance(IMonoObject *pScriptInstanc
 	return result;
 }
 
-void CScriptSystem::ReportScriptInstanceDestroyed(IMonoObject *pScriptInstance, int scriptId)
+void CScriptSystem::ReportScriptInstanceDestroyed(ICryScriptInstance *pScriptInstance, int scriptId)
 {
 	for each(auto listener in m_listeners)
 		listener->OnScriptInstanceReleased(pScriptInstance, scriptId);
