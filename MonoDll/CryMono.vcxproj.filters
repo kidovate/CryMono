@@ -169,8 +169,16 @@
     <ClInclude Include="Headers\ICryScriptInstance.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="AIActor.h">
       <Filter>ActorSystem</Filter>
+=======
+    <ClInclude Include="Headers\IMonoMethod.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoMethod.h">
+      <Filter>Wrappers</Filter>
+>>>>>>> 48c374d... Added new IMonoMethod interface; started using caching to avoid querying methods at runtime
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -292,8 +300,16 @@
     <ClCompile Include="Scriptbinds\CryPak.cpp">
       <Filter>ScriptBinds\Utils</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="AIActor.cpp">
       <Filter>ActorSystem</Filter>
+=======
+    <ClCompile Include="MonoMethod.cpp">
+      <Filter>Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEventHandling.cpp">
+      <Filter>EntitySystem</Filter>
+>>>>>>> 48c374d... Added new IMonoMethod interface; started using caching to avoid querying methods at runtime
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
