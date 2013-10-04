@@ -28,6 +28,7 @@ CMonoActor::CMonoActor()
 	, m_bClient(false)
 	, m_bMigrating(false)
 	, m_pScript(nullptr)
+	, m_pManagedObject(nullptr)
 {
 	m_currentPhysProfile=GetDefaultProfile(eEA_Physics);
 }
@@ -172,10 +173,10 @@ void CMonoActor::HandleEvent(const SGameObjectEvent &event)
 
 void CMonoActor::ProcessEvent(SEntityEvent& event)
 {
-	if(m_pScript == nullptr)
+	if(m_pManagedObject == nullptr)
 		return;
 
-	CEntityEventHandler::HandleEntityEvent(CEntityEventHandler::Actor, event, GetEntity(), m_pScript);
+	CEntityEventHandler::HandleEntityEvent(CEntityEventHandler::Actor, event, GetEntity(), m_pManagedObject);
 
 	switch (event.event)
 	{
@@ -229,7 +230,10 @@ void CMonoActor::OnScriptInstanceInitialized(ICryScriptInstance *pScriptInstance
 		pObject->Release();
 
 		if(id == GetEntityId())
+		{
 			m_pScript = pScriptInstance;
+			m_pManagedObject = pScriptInstance->GetManagedObject();
+		}
 	}
 }
 
@@ -238,7 +242,7 @@ void CMonoActor::UpdateView(SViewParams &viewParams)
 	void *args[1];
 	args[0] = &viewParams;
 
-	m_pUpdateView->Invoke(m_pScript->GetManagedObject(), args);
+	m_pUpdateView->Invoke(m_pManagedObject, args);
 }
 
 void CMonoActor::PostUpdateView(SViewParams &viewParams)
@@ -246,7 +250,7 @@ void CMonoActor::PostUpdateView(SViewParams &viewParams)
 	void *args[1];
 	args[0] = &viewParams;
 
-	m_pPostUpdateView->Invoke(m_pScript->GetManagedObject(), args);
+	m_pPostUpdateView->Invoke(m_pManagedObject, args);
 }
 
 bool CMonoActor::SetAspectProfile( EEntityAspects aspect, uint8 profile )
@@ -524,7 +528,7 @@ bool CMonoActor::NetSerialize( TSerialize ser, EEntityAspects aspect, uint8 prof
 	params[2] = &profile;
 	params[3] = &pflags;
 
-	m_pInternalNetSerialize->Invoke(m_pScript->GetManagedObject(), params);
+	m_pInternalNetSerialize->Invoke(m_pManagedObject, params);
 
 	ser.EndGroup();
 
@@ -538,7 +542,7 @@ void CMonoActor::FullSerialize(TSerialize ser)
 	IMonoArray *pArgs = CreateMonoArray(1);
 	pArgs->InsertNativePointer(&ser);
 
-	m_pInternalFullSerialize->InvokeArray(m_pScript->GetManagedObject(), pArgs);
+	m_pInternalFullSerialize->InvokeArray(m_pManagedObject, pArgs);
 	pArgs->Release();
 
 	ser.EndGroup();
@@ -546,7 +550,7 @@ void CMonoActor::FullSerialize(TSerialize ser)
 
 void CMonoActor::PostSerialize()
 {
-	m_pPostSerialize->Invoke(m_pScript->GetManagedObject());
+	m_pPostSerialize->Invoke(m_pManagedObject);
 }
 
 IMPLEMENT_RMI(CMonoActor, SvScriptRMI)
