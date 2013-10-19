@@ -194,6 +194,8 @@ protected:
 	static IEntity *GetEntity(EntityId id);
 	static EntityId GetEntityId(IEntity *pEntity);
 
+	static EntityGUID GetEntityGUID(IEntity *pEntity);
+
 	static bool RegisterEntityClass(SEntityRegistrationParams);
 	static mono::string GetEntityClassName(IEntity *pEntity);
 
@@ -241,7 +243,7 @@ protected:
 	static void SetVisionParams(IEntity *pEntity, float r, float g, float b, float a);
 	static void SetHUDSilhouettesParams(IEntity *pEntity, float r, float g, float b, float a);
 
-	static IEntityLink *AddEntityLink(IEntity *pEntity, mono::string linkName, EntityId otherId, Quat relativeRot, Vec3 relativePos);
+	static IEntityLink *AddEntityLink(IEntity *pEntity, mono::string linkName, EntityId otherId, EntityGUID entityGuid, Quat relativeRot, Vec3 relativePos);
 	static mono::object GetEntityLinks(IEntity *pEntity);
 	static void RemoveAllEntityLinks(IEntity *pEntity);
 	static void RemoveEntityLink(IEntity *pEntity, IEntityLink *pLink);
@@ -264,7 +266,6 @@ protected:
 	static IAttachment *GetAttachmentByName(IEntity *pEnt, mono::string name, int slot);
 
 	static CCGFAttachment *BindAttachmentToCGF(IAttachment *pAttachment, mono::string cgf, IMaterial *pMaterial);
-	static CCHRAttachment *BindAttachmentToCHR(IAttachment *pAttachment, mono::string chr, IMaterial *pMaterial);
 	static CMonoEntityAttachment *BindAttachmentToEntity(IAttachment *pAttachment, EntityId id);
 	static CLightAttachment *BindAttachmentToLight(IAttachment *pAttachment, CDLight &light);
 	static CEffectAttachment *BindAttachmentToParticleEffect(IAttachment *pAttachment, IParticleEffect *pParticleEffect, Vec3 offset, Vec3 dir, float scale);
@@ -324,7 +325,7 @@ protected:
 	static int GetNumAreas();
 	static const IArea *GetArea(int areaId);
 
-	static mono::object QueryAreas(Vec3 vPos, int maxResults, bool forceCalculation);
+	static mono::object QueryAreas(EntityId id, Vec3 vPos, int maxResults, bool forceCalculation);
 
 	static int GetAreaEntityAmount(IArea *pArea);
 	static const EntityId GetAreaEntityByIdx(IArea *pArea, int index);

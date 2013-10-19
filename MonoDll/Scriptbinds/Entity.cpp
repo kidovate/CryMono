@@ -35,6 +35,7 @@ CScriptbind_Entity::CScriptbind_Entity()
 
 	REGISTER_METHOD(GetEntity);
 	REGISTER_METHOD(GetEntityId);
+	REGISTER_METHOD(GetEntityGUID);
 	REGISTER_METHOD(FindEntity);
 	REGISTER_METHOD(GetEntitiesByClass);
 	REGISTER_METHOD(GetEntitiesByClasses);
@@ -109,7 +110,6 @@ CScriptbind_Entity::CScriptbind_Entity()
 	REGISTER_METHOD(GetAttachmentByName);
 
 	REGISTER_METHOD(BindAttachmentToCGF);
-	REGISTER_METHOD(BindAttachmentToCHR);
 	REGISTER_METHOD(BindAttachmentToEntity);
 	REGISTER_METHOD(BindAttachmentToLight);
 	REGISTER_METHOD(BindAttachmentToParticleEffect);
@@ -303,7 +303,7 @@ bool CScriptbind_Entity::OnRemove(IEntity *pIEntity)
 struct SMonoEntityCreator
 	: public IGameObjectExtensionCreatorBase
 {
-	virtual IGameObjectExtension *Create() { return new CMonoEntityExtension(); }
+	virtual IGameObjectExtensionPtr Create() { return ComponentCreate_DeleteWithRelease<CMonoEntityExtension>(); }
 	virtual void GetGameObjectExtensionRMIData(void **ppRMI, size_t *nCount) { return CMonoEntityExtension::GetGameObjectExtensionRMIData(ppRMI, nCount); }
 };
 
@@ -443,6 +443,11 @@ IEntity *CScriptbind_Entity::GetEntity(EntityId id)
 EntityId CScriptbind_Entity::GetEntityId(IEntity *pEntity)
 {
 	return pEntity->GetId();
+}
+
+EntityGUID CScriptbind_Entity::GetEntityGUID(IEntity *pEntity)
+{
+	return pEntity->GetGuid();
 }
 
 EntityId CScriptbind_Entity::FindEntity(mono::string name)
@@ -707,9 +712,9 @@ void CScriptbind_Entity::SetHUDSilhouettesParams(IEntity *pEntity, float r, floa
 	pRenderProxy->SetVisionParams(r, g, b, a);
 }
 
-IEntityLink *CScriptbind_Entity::AddEntityLink(IEntity *pEntity, mono::string linkName, EntityId otherId, Quat relativeRot, Vec3 relativePos)
+IEntityLink *CScriptbind_Entity::AddEntityLink(IEntity *pEntity, mono::string linkName, EntityId otherId, EntityGUID entityGuid, Quat relativeRot, Vec3 relativePos)
 {
-	return pEntity->AddEntityLink(ToCryString(linkName), otherId, relativeRot, relativePos);
+	return pEntity->AddEntityLink(ToCryString(linkName), otherId, entityGuid, relativeRot, relativePos);
 }
 
 mono::object CScriptbind_Entity::GetEntityLinks(IEntity *pEntity)
@@ -876,25 +881,12 @@ CCGFAttachment *CScriptbind_Entity::BindAttachmentToCGF(IAttachment *pAttachment
 	return pCGFAttachment;
 }
 
-CCHRAttachment *CScriptbind_Entity::BindAttachmentToCHR(IAttachment *pAttachment, mono::string chr, IMaterial *pMaterial)
-{
-	pAttachment->ClearBinding();
-
-	CCHRAttachment *pCHRAttachment = new CCHRAttachment();
-	pCHRAttachment->m_pCharInstance = gEnv->pCharacterManager->CreateInstance(ToCryString(chr));
-	pCHRAttachment->SetReplacementMaterial(pMaterial);
-
-	pAttachment->AddBinding(pCHRAttachment);
-
-	return pCHRAttachment;
-}
-
 class CMonoEntityAttachment : public CEntityAttachment
 {
 public:
 	CMonoEntityAttachment() {}
 
-	void UpdateAttachment(IAttachment *pIAttachment,const QuatT &m, float fZoomAdjustedDistanceFromCamera, uint32 OnRender) override
+	void ProcessAttachment(IAttachment *pIAttachment) override
 	{
 		const QuatTS& quatT = pIAttachment->GetAttWorldAbsolute();
 
@@ -967,7 +959,7 @@ QuatT CScriptbind_Entity::GetAttachmentDefaultRelative(IAttachment *pAttachment)
 IMaterial *CScriptbind_Entity::GetAttachmentMaterial(IAttachment *pAttachment)
 {
 	if(IAttachmentObject *pObject = pAttachment->GetIAttachmentObject())
-		return pObject->GetMaterial();
+		return pObject->GetBaseMaterial();
 
 	return nullptr;
 }
@@ -1245,11 +1237,11 @@ const IArea *CScriptbind_Entity::GetArea(int areaId)
 	return gEnv->pEntitySystem->GetAreaManager()->GetArea(areaId);
 }
 
-mono::object CScriptbind_Entity::QueryAreas(Vec3 vPos, int maxResults, bool forceCalculation)
+mono::object CScriptbind_Entity::QueryAreas(EntityId id, Vec3 vPos, int maxResults, bool forceCalculation)
 {
 	SAreaManagerResult *pResults = new SAreaManagerResult[maxResults];
 
-	gEnv->pEntitySystem->GetAreaManager()->QueryAreas(vPos, pResults, maxResults);
+	gEnv->pEntitySystem->GetAreaManager()->QueryAreas(id, vPos, pResults, maxResults);
 
 	IMonoArray *pArray = CreateDynamicMonoArray();
 	IMonoClass *pClass = g_pScriptSystem->GetCryBraryAssembly()->GetClass("AreaQueryResult");

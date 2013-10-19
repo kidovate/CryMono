@@ -1,8 +1,10 @@
 #include "StdAfx.h"
 #include "ActorSystem.h"
 
-#include "MonoScriptSystem.h"
 #include "Actor.h"
+#include "AIActor.h"
+
+#include "MonoScriptSystem.h"
 
 #include "MonoEntity.h"
 
@@ -103,7 +105,10 @@ void CScriptbind_ActorSystem::RegisterActorClass(mono::string name, bool isNativ
 			return;
 		}
 
-		g_pScriptSystem->GetIGameFramework()->RegisterFactory(className, (CMonoActor *)0, isAI, (CMonoActor *)0);
+		if(isAI)
+			g_pScriptSystem->GetIGameFramework()->RegisterFactory(className, (CMonoAIActor *)0, true, (CMonoAIActor *)0);
+		else
+			g_pScriptSystem->GetIGameFramework()->RegisterFactory(className, (CMonoActor *)0, false, (CMonoActor *)0);
 	}
 
 	m_monoActorClasses.insert(TActorClasses::value_type(className, isNative ? EMonoActorType_Native : EMonoActorType_Managed));

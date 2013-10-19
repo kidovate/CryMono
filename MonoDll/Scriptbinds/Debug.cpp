@@ -57,9 +57,7 @@ void CScriptbind_Debug::AddPersistentLine(Vec3 pos, Vec3 end, ColorF clr, float 
 void CScriptbind_Debug::AddAABB(Vec3 pos, AABB aabb, ColorF clr, float timeout)
 {
 	GetIPersistentDebug()->Begin("TestAddAABB", false);
-#ifndef CRYENGINE_3_4_3
 	GetIPersistentDebug()->AddAABB(aabb.min + pos, aabb.max + pos, clr, timeout);
-#endif
 }
 
 IPersistantDebug *CScriptbind_Debug::GetIPersistentDebug()

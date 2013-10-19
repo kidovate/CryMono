@@ -106,11 +106,17 @@ namespace CryEngine
         public Material Material { get { return Material.Get(this); } set { Material.Set(this, value); } }
 
         /// <summary>
-        /// Gets  the runtime unique identifier of this entity assigned to it by the Entity System.
+        /// Gets the runtime unique identifier of this entity assigned to it by the Entity System.
         /// EntityId may not be the same when saving/loading entity.
         /// EntityId is mostly used in runtime for fast and unique identification of entities..
         /// </summary>
         public EntityId Id { get; internal set; }
+
+        /// <summary>
+        /// Gets the globally unique identifier of this entity, assigned to it by the Entity System.
+        /// EntityGUID's are guaranteed to be the same when saving / loading, and are the same in both editor and pure game mode.
+        /// </summary>
+        public EntityGUID GUID { get { return NativeEntityMethods.GetEntityGUID(this.GetIEntity()); } }
 
         public EntityUpdatePolicy UpdatePolicy { get { return NativeEntityMethods.GetUpdatePolicy(this.GetIEntity()); } set { NativeEntityMethods.SetUpdatePolicy(this.GetIEntity(), value); } }
 

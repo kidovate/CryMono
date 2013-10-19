@@ -34,9 +34,9 @@ namespace CryEngine
 			return TryGet(NativeEntityMethods.GetArea(areaId));
 		}
 
-		public static IEnumerable<AreaQueryResult> QueryAreas(Vec3 pos, int maxResults, bool forceCalculation)
+		public static IEnumerable<AreaQueryResult> QueryAreas(EntityId id, Vec3 pos, int maxResults, bool forceCalculation)
 		{
-			var objAreas = NativeEntityMethods.QueryAreas(pos, maxResults, forceCalculation);
+			var objAreas = NativeEntityMethods.QueryAreas(id, pos, maxResults, forceCalculation);
 
 			return objAreas.Cast<AreaQueryResult>();
 		}

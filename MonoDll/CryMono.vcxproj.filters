@@ -169,6 +169,9 @@
     <ClInclude Include="Headers\ICryScriptInstance.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="AIActor.h">
+      <Filter>ActorSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -288,6 +291,9 @@
     </ClCompile>
     <ClCompile Include="Scriptbinds\CryPak.cpp">
       <Filter>ScriptBinds\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="AIActor.cpp">
+      <Filter>ActorSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

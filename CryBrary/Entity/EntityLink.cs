@@ -12,7 +12,7 @@ namespace CryEngine
         #region Statics
         public static EntityLink Create(EntityBase parent, EntityBase slave, string linkName, Vec3? relativePos = null, Quat? relativeRot = null)
         {
-            return new EntityLink(NativeEntityMethods.AddEntityLink(parent.GetIEntity(), linkName, slave.Id, relativeRot ?? Quat.Identity, relativePos ?? Vec3.Zero), parent);
+            return new EntityLink(NativeEntityMethods.AddEntityLink(parent.GetIEntity(), linkName, slave.Id, slave.GUID, relativeRot ?? Quat.Identity, relativePos ?? Vec3.Zero), parent);
         }
 
         public static void RemoveAll(EntityBase parent)

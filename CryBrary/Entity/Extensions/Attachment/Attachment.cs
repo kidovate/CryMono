@@ -49,15 +49,6 @@ namespace CryEngine
             NativeEntityMethods.BindAttachmentToCGF(Handle, cgfModel, materialPtr);
         }
 
-        public void SwitchToCharacterObject(string chrModel, Material material)
-        {
-            IntPtr materialPtr = IntPtr.Zero;
-            if (material != null)
-                materialPtr = material.Handle;
-
-            NativeEntityMethods.BindAttachmentToCHR(Handle, chrModel, materialPtr);
-        }
-
         public void SwitchToEntityObject(EntityId entityId)
         {
             NativeEntityMethods.BindAttachmentToEntity(Handle, entityId);

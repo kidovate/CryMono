@@ -195,6 +195,11 @@ void CMonoActor::ProcessEvent(SEntityEvent& event)
 				m_pAnimatedCharacter->ResetState();
 		}
 		break;
+	case ENTITY_EVENT_XFORM:
+		{
+			CryLogAlways("XForm");
+		}
+		break;
   }  
 }
 

@@ -36,6 +36,8 @@ namespace CryEngine.Native
         extern public static IntPtr GetEntity(EntityId entityId);
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern public static EntityId GetEntityId(IntPtr entPtr);
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        extern public static EntityGUID GetEntityGUID(IntPtr entPtr);
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern public static EntityId FindEntity(string name);
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -115,7 +117,7 @@ namespace CryEngine.Native
         extern public static void LoadCharacter(IntPtr ptr, string fileName, int slot);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        extern public static IntPtr AddEntityLink(IntPtr entPtr, string linkName, EntityId otherId, Quat relativeRot, Vec3 relativePos);
+        extern public static IntPtr AddEntityLink(IntPtr entPtr, string linkName, EntityId otherId, EntityGUID otherGuid, Quat relativeRot, Vec3 relativePos);
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern public static object[] GetEntityLinks(IntPtr entPtr);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -153,8 +155,6 @@ namespace CryEngine.Native
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern public static IntPtr BindAttachmentToCGF(IntPtr attachmentPtr, string cgf, IntPtr materialPtr);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        extern public static IntPtr BindAttachmentToCHR(IntPtr attachmentPtr, string chr, IntPtr materialPtr);
         [MethodImpl(MethodImplOptions.InternalCall)]
         extern public static IntPtr BindAttachmentToEntity(IntPtr attachmentPtr, EntityId id);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -251,7 +251,7 @@ namespace CryEngine.Native
 		extern public static IntPtr GetArea(int areaId);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		extern public static object[] QueryAreas(Vec3 vPos, int maxResults, bool forceCalculation);
+		extern public static object[] QueryAreas(EntityId id, Vec3 vPos, int maxResults, bool forceCalculation);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		extern public static int GetAreaEntityAmount(IntPtr pArea);
