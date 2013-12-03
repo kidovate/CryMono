@@ -125,37 +125,37 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin32</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin64</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin32</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin32</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnitTests|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin32</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin64</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin64</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnitTests|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Build\Bin64</OutDir>
+    <OutDir>$(SolutionDir)..\Build\Bin32\Plugins\CryMono</OutDir>
   </PropertyGroup>
   <PropertyGroup>
     <DefaultConstant>
