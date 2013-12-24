@@ -1007,9 +1007,9 @@ QuatT CScriptbind_Entity::GetJointAbsolute(IEntity *pEntity, mono::string jointN
 	{
 		if(ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose())
 		{
-			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
-			if(id > -1)
-				return pSkeletonPose->GetAbsJointByID(id);
+			//int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
+			//if(id > -1)
+			//	return pSkeletonPose->GetAbsJointByID(id);
 		}
 	}
 
@@ -1022,9 +1022,10 @@ QuatT CScriptbind_Entity::GetJointAbsoluteDefault(IEntity *pEntity, mono::string
 	{
 		if(ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose())
 		{
-			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
-			if(id > -1)
-				return pSkeletonPose->GetDefaultAbsJointByID(id);
+			//TODO: Fix this for the latest cryengine
+			//int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
+			//if(id > -1)
+			//	return pSkeletonPose->GetDefaultAbsJointByID(id);
 		}
 	}
 
@@ -1037,9 +1038,10 @@ QuatT CScriptbind_Entity::GetJointRelative(IEntity *pEntity, mono::string jointN
 	{
 		if(ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose())
 		{
-			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
-			if(id > -1)
-				return pSkeletonPose->GetRelJointByID(id);
+			//TODO: Fix this for the latest cryengine
+			//int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
+			//if(id > -1)
+			//	return pSkeletonPose->GetRelJointByID(id);
 		}
 	}
 
@@ -1052,9 +1054,10 @@ QuatT CScriptbind_Entity::GetJointRelativeDefault(IEntity *pEntity, mono::string
 	{
 		if(ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose())
 		{
-			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
-			if(id > -1)
-				return pSkeletonPose->GetDefaultRelJointByID(id);
+			//TODO: Fix this for the latest cryengine
+//			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
+//			if(id > -1)
+//				return pSkeletonPose->GetDefaultRelJointByID(id);
 		}
 	}
 
@@ -1067,8 +1070,9 @@ void CScriptbind_Entity::SetJointAbsolute(IEntity *pEntity, mono::string jointNa
 	{
 		if(ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose())
 		{
-			int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
-		//	if(id > -1)
+			//TODO: Fix this for the latest cryengine
+			//int16 id = pSkeletonPose->GetJointIDByName(ToCryString(jointName));
+			//if(id > -1)
 				//pSkeletonPose->SetAbsJointByID(id, absolute);
 		}
 	}
